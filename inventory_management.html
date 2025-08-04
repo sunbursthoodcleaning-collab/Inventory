@@ -1,0 +1,1531 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUNBURST Inventory & Equipment Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-orange: #FF6B35;
+            --secondary-orange: #F7931E;
+            --dark-blue: #2c3e50;
+            --light-gray: #f8f9fa;
+            --border-gray: #e1e8ed;
+            --text-gray: #666;
+            --success-green: #28a745;
+            --warning-yellow: #ffc107;
+            --danger-red: #dc3545;
+            --info-blue: #17a2b8;
+            --shadow-light: 0 5px 15px rgba(0,0,0,0.1);
+            --shadow-medium: 0 10px 25px rgba(0,0,0,0.1);
+            --shadow-heavy: 0 20px 40px rgba(0,0,0,0.1);
+            --border-radius: 10px;
+            --border-radius-large: 20px;
+            --transition: all 0.3s ease;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            min-height: 100vh;
+            padding: 20px;
+            color: var(--dark-blue);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            border-radius: var(--border-radius-large);
+            box-shadow: var(--shadow-heavy);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+
+        .header p {
+            opacity: 0.95;
+            font-size: 1.2em;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: var(--border-radius);
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            transform: translateX(400px);
+            transition: var(--transition);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success { background: var(--success-green); }
+        .notification.error { background: var(--danger-red); }
+        .notification.warning { background: var(--warning-yellow); color: var(--dark-blue); }
+
+        .main-content {
+            padding: 40px;
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 40px;
+            border-bottom: 3px solid var(--light-gray);
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 18px 25px;
+            background: var(--light-gray);
+            border: none;
+            border-radius: var(--border-radius) var(--border-radius) 0 0;
+            margin-right: 8px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-gray);
+            transition: var(--transition);
+        }
+
+        .tab:hover {
+            background: #e9ecef;
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: var(--primary-orange);
+            color: white;
+            box-shadow: var(--shadow-light);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .dashboard-card {
+            background: white;
+            padding: 30px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-medium);
+            border-left: 5px solid var(--primary-orange);
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .dashboard-card h3 {
+            color: var(--dark-blue);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            display: flex;
+            align-items: center;
+        }
+
+        .dashboard-card h3::before {
+            margin-right: 10px;
+            font-size: 1.2em;
+        }
+
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .inventory-item {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--shadow-light);
+            border-left: 4px solid var(--border-gray);
+            transition: var(--transition);
+        }
+
+        .inventory-item:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .inventory-item.low-stock {
+            border-left-color: var(--warning-yellow);
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+        }
+
+        .inventory-item.critical-stock {
+            border-left-color: var(--danger-red);
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+        }
+
+        .inventory-item.good-stock {
+            border-left-color: var(--success-green);
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .item-name {
+            font-weight: 600;
+            color: var(--dark-blue);
+            font-size: 1.1em;
+        }
+
+        .stock-level {
+            padding: 5px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .stock-level.good { background: var(--success-green); color: white; }
+        .stock-level.low { background: var(--warning-yellow); color: var(--dark-blue); }
+        .stock-level.critical { background: var(--danger-red); color: white; }
+
+        .item-details {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+
+        .item-details strong {
+            color: var(--dark-blue);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--light-gray);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            transition: var(--transition);
+        }
+
+        .progress-fill.good { background: var(--success-green); }
+        .progress-fill.low { background: var(--warning-yellow); }
+        .progress-fill.critical { background: var(--danger-red); }
+
+        .btn {
+            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: var(--shadow-light);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-medium);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 12px;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-success {
+            background: var(--success-green);
+        }
+
+        .btn-danger {
+            background: var(--danger-red);
+        }
+
+        .form-section {
+            background: var(--light-gray);
+            padding: 30px;
+            border-radius: var(--border-radius);
+            margin-bottom: 30px;
+            border-left: 5px solid var(--primary-orange);
+        }
+
+        .form-section h2 {
+            color: var(--dark-blue);
+            margin-bottom: 25px;
+            font-size: 1.5em;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--dark-blue);
+            font-size: 14px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border-gray);
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            transition: var(--transition);
+            background: white;
+            font-family: inherit;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        }
+
+        .equipment-status {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .equipment-card {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 25px;
+            box-shadow: var(--shadow-medium);
+            border-top: 4px solid var(--info-blue);
+            transition: var(--transition);
+        }
+
+        .equipment-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-heavy);
+        }
+
+        .equipment-card.needs-attention {
+            border-top-color: var(--warning-yellow);
+            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+        }
+
+        .equipment-card.critical {
+            border-top-color: var(--danger-red);
+            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+        }
+
+        .equipment-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .equipment-name {
+            font-size: 1.2em;
+            font-weight: 700;
+            color: var(--dark-blue);
+        }
+
+        .equipment-status-badge {
+            padding: 6px 12px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .status-good { background: var(--success-green); color: white; }
+        .status-fair { background: var(--warning-yellow); color: var(--dark-blue); }
+        .status-poor { background: var(--danger-red); color: white; }
+
+        .maintenance-items {
+            list-style: none;
+            margin: 15px 0;
+        }
+
+        .maintenance-items li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-gray);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .maintenance-items li:last-child {
+            border-bottom: none;
+        }
+
+        .status-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .status-icon.good { background: var(--success-green); }
+        .status-icon.warning { background: var(--warning-yellow); color: var(--dark-blue); }
+        .status-icon.critical { background: var(--danger-red); }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .header { padding: 30px 20px; }
+            .header h1 { font-size: 2em; }
+            .main-content { padding: 20px; }
+            .tabs { flex-direction: column; }
+            .tab { margin-right: 0; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="notification" id="notification"></div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🏢 SUNBURST Inventory & Equipment Management</h1>
+            <p>Professional Supply & Maintenance Tracking System</p>
+        </div>
+
+        <div class="main-content">
+            <div class="tabs">
+                <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
+                <button class="tab" data-tab="supplies">🧽 Supplies</button>
+                <button class="tab" data-tab="chemicals">🧪 Chemicals</button>
+                <button class="tab" data-tab="equipment">🔧 Equipment</button>
+                <button class="tab" data-tab="add-item">➕ Add Item</button>
+                <button class="tab" data-tab="maintenance">🛠️ Maintenance</button>
+            </div>
+
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <div class="dashboard-grid">
+                    <div class="dashboard-card">
+                        <h3 style="--before-content: '📦';">📦 Inventory Overview</h3>
+                        <div class="item-details">
+                            <span>Total Items:</span>
+                            <strong id="totalItems">0</strong>
+                        </div>
+                        <div class="item-details">
+                            <span>Low Stock Alerts:</span>
+                            <strong style="color: var(--warning-yellow);" id="lowStockCount">0</strong>
+                        </div>
+                        <div class="item-details">
+                            <span>Critical Stock:</span>
+                            <strong style="color: var(--danger-red);" id="criticalStockCount">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>🔧 Equipment Status</h3>
+                        <div class="item-details">
+                            <span>Total Equipment:</span>
+                            <strong id="totalEquipment">0</strong>
+                        </div>
+                        <div class="item-details">
+                            <span>Needs Attention:</span>
+                            <strong style="color: var(--warning-yellow);" id="equipmentWarnings">0</strong>
+                        </div>
+                        <div class="item-details">
+                            <span>Critical Issues:</span>
+                            <strong style="color: var(--danger-red);" id="equipmentCritical">0</strong>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-card">
+                        <h3>📋 Quick Actions</h3>
+                        <div style="display: flex; flex-direction: column; gap: 10px;">
+                            <button class="btn btn-small" onclick="showTab('add-item')">➕ Add New Item</button>
+                            <button class="btn btn-small btn-secondary" onclick="showTab('maintenance')">🛠️ Schedule Maintenance</button>
+                            <button class="btn btn-small btn-success" onclick="generateShoppingList()">🛒 Generate Shopping List</button>
+                        </div>
+                    </div>
+                </div>
+
+                <h2 style="margin-bottom: 20px; color: var(--dark-blue);">🚨 Items Needing Attention</h2>
+                <div id="alertsContainer" class="inventory-grid"></div>
+            </div>
+
+            <!-- Supplies Tab -->
+            <div id="supplies" class="tab-content">
+                <h2 style="margin-bottom: 20px; color: var(--dark-blue);">🧽 Cleaning Supplies</h2>
+                <div id="suppliesContainer" class="inventory-grid"></div>
+            </div>
+
+            <!-- Chemicals Tab -->
+            <div id="chemicals" class="tab-content">
+                <h2 style="margin-bottom: 20px; color: var(--dark-blue);">🧪 Chemicals & Detergents</h2>
+                <div id="chemicalsContainer" class="inventory-grid"></div>
+            </div>
+
+            <!-- Equipment Tab -->
+            <div id="equipment" class="tab-content">
+                <h2 style="margin-bottom: 20px; color: var(--dark-blue);">🔧 Equipment Status</h2>
+                <div id="equipmentContainer" class="equipment-status"></div>
+            </div>
+
+            <!-- Add Item Tab -->
+            <div id="add-item" class="tab-content">
+                <div class="form-section">
+                    <h2>Add New Inventory Item</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="itemName">Item Name *</label>
+                            <input type="text" id="itemName" required placeholder="e.g., Shop Rags, Degreaser">
+                        </div>
+                        <div class="form-group">
+                            <label for="itemCategory">Category *</label>
+                            <select id="itemCategory" required>
+                                <option value="">Select Category</option>
+                                <option value="supplies">Supplies</option>
+                                <option value="chemicals">Chemicals</option>
+                                <option value="equipment">Equipment</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="currentStock">Current Stock *</label>
+                            <input type="number" id="currentStock" required min="0" max="9999" 
+                                   placeholder="Current quantity" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="form-group">
+                            <label for="unopenedStock">Unopened Stock</label>
+                            <input type="number" id="unopenedStock" min="0" max="999" 
+                                   placeholder="Unopened units" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="stockUnit">Unit of Measurement</label>
+                            <select id="stockUnit">
+                                <option value="pieces">Pieces</option>
+                                <option value="boxes">Boxes</option>
+                                <option value="rolls">Rolls</option>
+                                <option value="bottles">Bottles</option>
+                                <option value="gallons">Gallons</option>
+                                <option value="pairs">Pairs</option>
+                                <option value="units">Units</option>
+                                <option value="pounds">Pounds</option>
+                                <option value="feet">Feet</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="minUnopenedStock">Min Unopened Required</label>
+                            <input type="number" id="minUnopenedStock" min="0" max="99" 
+                                   placeholder="Minimum unopened" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="minStock">Minimum Stock Level *</label>
+                            <input type="number" id="minStock" required min="0" max="9999" 
+                                   placeholder="Reorder when below" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxStock">Maximum Stock Level</label>
+                            <input type="number" id="maxStock" min="0" max="9999" 
+                                   placeholder="Storage capacity" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="supplier">Supplier/Brand</label>
+                            <input type="text" id="supplier" placeholder="Where to purchase">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastPurchase">Last Purchase Date</label>
+                            <input type="date" id="lastPurchase">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="ageMonths">Age (Months)</label>
+                            <input type="number" id="ageMonths" min="0" max="240" 
+                                   placeholder="For aging equipment" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                        <div class="form-group">
+                            <label for="maxAgeMonths">Max Age (Months)</label>
+                            <input type="number" id="maxAgeMonths" min="0" max="240" 
+                                   placeholder="Replace after this age" inputmode="numeric" pattern="[0-9]*">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="itemNotes">Notes</label>
+                        <textarea id="itemNotes" placeholder="Special instructions, storage requirements, etc."></textarea>
+                    </div>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn" onclick="saveItem()">💾 Save Item</button>
+                        <button class="btn btn-secondary" onclick="clearItemForm()" style="margin-left: 15px;">🗑️ Clear Form</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Maintenance Tab -->
+            <div id="maintenance" class="tab-content">
+                <div class="form-section">
+                    <h2>Equipment Maintenance</h2>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="equipmentName">Equipment Name *</label>
+                            <input type="text" id="equipmentName" required placeholder="e.g., Pressure Washer #1">
+                        </div>
+                        <div class="form-group">
+                            <label for="equipmentType">Equipment Type *</label>
+                            <select id="equipmentType" required>
+                                <option value="">Select Type</option>
+                                <option value="pressure-washer">Pressure Washer</option>
+                                <option value="hose">Hose (Pressure/Garden)</option>
+                                <option value="ladder">Ladder</option>
+                                <option value="pump">Pump</option>
+                                <option value="vehicle">Vehicle</option>
+                                <option value="generator">Generator</option>
+                                <option value="other">Other Equipment</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="equipmentCondition">Overall Condition *</label>
+                            <select id="equipmentCondition" required style="font-size: 16px;">
+                                <option value="">Select Condition</option>
+                                <option value="excellent">✅ Excellent - Like New</option>
+                                <option value="good">✅ Good - Working Well</option>
+                                <option value="fair">⚠️ Fair - Shows Wear</option>
+                                <option value="poor">🔴 Poor - Needs Attention</option>
+                                <option value="critical">🚨 Critical - Replace Soon</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastMaintenance">Last Maintenance</label>
+                            <input type="date" id="lastMaintenance">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="maintenanceNotes">Maintenance Notes</label>
+                        <textarea id="maintenanceNotes" placeholder="Oil change needed, spark plug replaced, hose has small leak but usable, etc."></textarea>
+                    </div>
+                    <div style="text-align: center; margin-top: 30px;">
+                        <button class="btn" onclick="saveEquipment()">🔧 Save Equipment</button>
+                        <button class="btn btn-secondary" onclick="clearEquipmentForm()" style="margin-left: 15px;">🗑️ Clear Form</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let inventory = [];
+        let equipment = [];
+
+        function showNotification(message, type) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type}`;
+            notification.classList.add('show');
+            
+            setTimeout(() => {
+                notification.classList.remove('show');
+            }, 4000);
+        }
+
+        function showTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.getElementById(tabName).classList.add('active');
+            document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+            
+            if (tabName === 'dashboard') {
+                updateDashboard();
+            } else if (tabName === 'supplies') {
+                displaySupplies();
+            } else if (tabName === 'chemicals') {
+                displayChemicals();
+            } else if (tabName === 'equipment') {
+                displayEquipment();
+            }
+        }
+
+        function getStockStatus(item) {
+            let issues = [];
+            let overallStatus = 'good';
+            
+            // Check basic stock levels
+            if (item.current_stock <= 0) {
+                issues.push('OUT OF STOCK');
+                overallStatus = 'critical';
+            } else if (item.current_stock <= item.min_stock) {
+                issues.push('LOW STOCK');
+                if (overallStatus !== 'critical') overallStatus = 'low';
+            }
+            
+            // Check unopened stock requirements
+            if (item.min_unopened && item.unopened_stock !== undefined) {
+                if (item.unopened_stock < item.min_unopened) {
+                    issues.push('NO UNOPENED BACKUP');
+                    overallStatus = 'critical';
+                }
+            }
+            
+            // Check age for aging equipment
+            if (item.age_months && item.max_age_months) {
+                const agePercentage = (item.age_months / item.max_age_months) * 100;
+                if (agePercentage >= 90) {
+                    issues.push('REPLACE SOON - OLD');
+                    overallStatus = 'critical';
+                } else if (agePercentage >= 70) {
+                    issues.push('AGING');
+                    if (overallStatus !== 'critical') overallStatus = 'low';
+                }
+            }
+            
+            const percentage = item.max_stock ? (item.current_stock / item.max_stock) * 100 : (item.current_stock / item.min_stock) * 100;
+            
+            return {
+                level: overallStatus,
+                text: issues.length > 0 ? issues.join(' + ') : 'GOOD STOCK',
+                percentage: Math.min(percentage, 100),
+                issues: issues
+            };
+        }
+
+        function createInventoryCard(item) {
+            const status = getStockStatus(item);
+            const categoryIcons = {
+                'critical-consumables': '🚨',
+                'critical-chemicals': '🧪',
+                'critical-ppe': '🦺',
+                'critical-equipment': '⚙️',
+                'critical-parts': '🔧',
+                'tools-losable': '🔨',
+                'consumable-tools': '🧽',
+                'aging-equipment': '⏳',
+                'replacement-parts': '🔩',
+                'electrical-components': '⚡'
+            };
+            
+            return `
+                <div class="inventory-item ${status.level}-stock">
+                    <div class="item-header">
+                        <span class="item-name">${categoryIcons[item.category] || '📦'} ${item.name}</span>
+                        <span class="stock-level ${status.level}">${status.text}</span>
+                    </div>
+                    <div class="item-details">
+                        <span>Current Stock:</span>
+                        <strong>${item.current_stock} ${item.unit}</strong>
+                    </div>
+                    ${item.unopened_stock !== undefined ? `
+                    <div class="item-details">
+                        <span>Unopened:</span>
+                        <strong style="color: ${item.unopened_stock >= (item.min_unopened || 0) ? 'var(--success-green)' : 'var(--danger-red)'}">
+                            ${item.unopened_stock} ${item.unit} ${item.min_unopened ? `(need ${item.min_unopened})` : ''}
+                        </strong>
+                    </div>` : ''}
+                    <div class="item-details">
+                        <span>Minimum Level:</span>
+                        <strong>${item.min_stock} ${item.unit}</strong>
+                    </div>
+                    ${item.max_stock ? `
+                    <div class="item-details">
+                        <span>Maximum Level:</span>
+                        <strong>${item.max_stock} ${item.unit}</strong>
+                    </div>` : ''}
+                    ${item.age_months ? `
+                    <div class="item-details">
+                        <span>Age:</span>
+                        <strong style="color: ${item.age_months >= (item.max_age_months * 0.7) ? 'var(--warning-yellow)' : 'var(--success-green)'}">
+                            ${item.age_months} months ${item.max_age_months ? `(max ${item.max_age_months})` : ''}
+                        </strong>
+                    </div>` : ''}
+                    <div class="progress-bar">
+                        <div class="progress-fill ${status.level}" style="width: ${Math.min(status.percentage, 100)}%"></div>
+                    </div>
+                    ${item.supplier ? `<div class="item-details"><span>Supplier:</span> <strong>${item.supplier}</strong></div>` : ''}
+                    ${item.last_purchase ? `<div class="item-details"><span>Last Purchase:</span> <strong>${new Date(item.last_purchase).toLocaleDateString()}</strong></div>` : ''}
+                    ${status.issues.length > 0 ? `
+                    <div style="margin: 10px 0; padding: 8px; background: var(--danger-red); color: white; border-radius: 5px; font-size: 12px; font-weight: bold;">
+                        ⚠️ ISSUES: ${status.issues.join(', ')}
+                    </div>` : ''}
+                    ${item.notes ? `<div class="item-details" style="margin-top: 10px;"><span>Notes:</span> ${item.notes}</div>` : ''}
+                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
+                        <button class="btn btn-small" onclick="editItem(${item.id})">✏️ Edit</button>
+                        <button class="btn btn-small btn-success" onclick="addStock(${item.id})">➕ Add Stock</button>
+                        ${item.unopened_stock !== undefined ? `<button class="btn btn-small" onclick="openPackage(${item.id})">📦 Open Package</button>` : ''}
+                        <button class="btn btn-small btn-danger" onclick="deleteItem(${item.id})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function createEquipmentCard(item) {
+            const conditionMap = {
+                'excellent': { status: 'good', text: 'Excellent', icon: '✅' },
+                'good': { status: 'good', text: 'Good', icon: '✅' },
+                'fair': { status: 'fair', text: 'Fair', icon: '⚠️' },
+                'poor': { status: 'poor', text: 'Poor', icon: '🔴' },
+                'critical': { status: 'poor', text: 'Critical', icon: '🚨' }
+            };
+            
+            const conditionInfo = conditionMap[item.condition] || conditionMap['good'];
+            
+            return `
+                <div class="equipment-card ${conditionInfo.status === 'poor' ? 'critical' : conditionInfo.status === 'fair' ? 'needs-attention' : ''}">
+                    <div class="equipment-header">
+                        <span class="equipment-name">${item.name}</span>
+                        <span class="equipment-status-badge status-${conditionInfo.status}">
+                            ${conditionInfo.icon} ${conditionInfo.text}
+                        </span>
+                    </div>
+                    <div class="item-details">
+                        <span>Type:</span>
+                        <strong>${item.type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</strong>
+                    </div>
+                    ${item.last_maintenance ? `
+                    <div class="item-details">
+                        <span>Last Maintenance:</span>
+                        <strong>${new Date(item.last_maintenance).toLocaleDateString()}</strong>
+                    </div>` : ''}
+                    ${item.notes ? `
+                    <div style="margin: 15px 0; padding: 10px; background: var(--light-gray); border-radius: 5px; font-size: 14px;">
+                        <strong>Notes:</strong> ${item.notes}
+                    </div>` : ''}
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <button class="btn btn-small" onclick="editEquipment(${item.id})">✏️ Edit</button>
+                        <button class="btn btn-small btn-success" onclick="logMaintenance(${item.id})">🔧 Log Maintenance</button>
+                        <button class="btn btn-small btn-danger" onclick="deleteEquipment(${item.id})">🗑️ Delete</button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateDashboard() {
+            const totalItems = inventory.length;
+            
+            // Count items with issues using the new status system
+            let lowStock = 0;
+            let criticalStock = 0;
+            
+            inventory.forEach(item => {
+                const status = getStockStatus(item);
+                if (status.level === 'low') lowStock++;
+                if (status.level === 'critical') criticalStock++;
+            });
+            
+            const totalEquipment = equipment.length;
+            const equipmentWarnings = equipment.filter(item => item.condition === 'fair' || item.condition === 'poor').length;
+            const equipmentCritical = equipment.filter(item => item.condition === 'critical').length;
+            
+            document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('lowStockCount').textContent = lowStock;
+            document.getElementById('criticalStockCount').textContent = criticalStock;
+            document.getElementById('totalEquipment').textContent = totalEquipment;
+            document.getElementById('equipmentWarnings').textContent = equipmentWarnings;
+            document.getElementById('equipmentCritical').textContent = equipmentCritical;
+            
+            // Show items needing attention
+            const alertItems = [
+                ...inventory.filter(item => {
+                    const status = getStockStatus(item);
+                    return status.level === 'critical' || status.level === 'low';
+                }),
+                ...equipment.filter(item => item.condition === 'poor' || item.condition === 'critical')
+            ];
+            
+            const alertsContainer = document.getElementById('alertsContainer');
+            if (alertItems.length === 0) {
+                alertsContainer.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1;">
+                        <div style="font-size: 3em; margin-bottom: 15px;">🎉</div>
+                        <h3>All Systems Green!</h3>
+                        <p>No items need immediate attention.</p>
+                    </div>
+                `;
+            } else {
+                const inventoryCards = alertItems
+                    .filter(item => item.current_stock !== undefined)
+                    .map(item => createInventoryCard(item));
+                const equipmentCards = alertItems
+                    .filter(item => item.condition !== undefined)
+                    .map(item => createEquipmentCard(item));
+                
+                alertsContainer.innerHTML = inventoryCards.concat(equipmentCards).join('');
+            }
+        }
+
+        function displaySupplies() {
+            const supplies = inventory.filter(item => item.category === 'supplies');
+            const container = document.getElementById('suppliesContainer');
+            
+            if (supplies.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1;">
+                        <div style="font-size: 3em; margin-bottom: 15px;">🧽</div>
+                        <h3>No Supplies Added</h3>
+                        <p>Add your first supply item to get started!</p>
+                        <button class="btn" onclick="showTab('add-item')" style="margin-top: 15px;">➕ Add Supply Item</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = supplies.map(item => createInventoryCard(item)).join('');
+            }
+        }
+
+        function displayChemicals() {
+            const chemicals = inventory.filter(item => item.category === 'chemicals');
+            const container = document.getElementById('chemicalsContainer');
+            
+            if (chemicals.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1;">
+                        <div style="font-size: 3em; margin-bottom: 15px;">🧪</div>
+                        <h3>No Chemicals Added</h3>
+                        <p>Add your first chemical/detergent to get started!</p>
+                        <button class="btn" onclick="showTab('add-item')" style="margin-top: 15px;">➕ Add Chemical Item</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = chemicals.map(item => createInventoryCard(item)).join('');
+            }
+        }
+
+        function displayEquipment() {
+            const container = document.getElementById('equipmentContainer');
+            
+            if (equipment.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1;">
+                        <div style="font-size: 3em; margin-bottom: 15px;">🔧</div>
+                        <h3>No Equipment Added</h3>
+                        <p>Add your first equipment item to get started!</p>
+                        <button class="btn" onclick="showTab('maintenance')" style="margin-top: 15px;">➕ Add Equipment</button>
+                    </div>
+                `;
+            } else {
+                container.innerHTML = equipment.map(item => createEquipmentCard(item)).join('');
+            }
+        }
+
+        function saveItem() {
+            const itemData = {
+                id: Date.now(),
+                name: document.getElementById('itemName').value.trim(),
+                category: document.getElementById('itemCategory').value,
+                current_stock: parseInt(document.getElementById('currentStock').value),
+                unopened_stock: parseInt(document.getElementById('unopenedStock').value) || undefined,
+                unit: document.getElementById('stockUnit').value,
+                min_stock: parseInt(document.getElementById('minStock').value),
+                min_unopened: parseInt(document.getElementById('minUnopenedStock').value) || undefined,
+                max_stock: parseInt(document.getElementById('maxStock').value) || null,
+                supplier: document.getElementById('supplier').value.trim() || null,
+                last_purchase: document.getElementById('lastPurchase').value || null,
+                age_months: parseInt(document.getElementById('ageMonths').value) || undefined,
+                max_age_months: parseInt(document.getElementById('maxAgeMonths').value) || undefined,
+                notes: document.getElementById('itemNotes').value.trim() || null
+            };
+            
+            if (!itemData.name || !itemData.category || itemData.current_stock < 0 || itemData.min_stock < 0) {
+                showNotification('Please fill in all required fields correctly', 'error');
+                return;
+            }
+            
+            inventory.push(itemData);
+            clearItemForm();
+            showNotification('Item added successfully!', 'success');
+            updateDashboard();
+        }
+
+        function openPackage(itemId) {
+            const item = inventory.find(i => i.id === itemId);
+            if (item && item.unopened_stock > 0) {
+                if (confirm(`Open 1 package of ${item.name}? This will move it from unopened to current stock.`)) {
+                    item.unopened_stock -= 1;
+                    item.current_stock += 1; // Assuming 1 package = 1 unit, adjust as needed
+                    showNotification(`Opened 1 package of ${item.name}`, 'success');
+                    updateDashboard();
+                    
+                    // Refresh current view
+                    const activeTab = document.querySelector('.tab.active').dataset.tab;
+                    if (activeTab === 'supplies') displaySupplies();
+                    if (activeTab === 'chemicals') displayChemicals();
+                }
+            }
+        }
+
+        function saveEquipment() {
+            const equipmentData = {
+                id: Date.now(),
+                name: document.getElementById('equipmentName').value.trim(),
+                type: document.getElementById('equipmentType').value,
+                condition: document.getElementById('equipmentCondition').value,
+                last_maintenance: document.getElementById('lastMaintenance').value || null,
+                notes: document.getElementById('maintenanceNotes').value.trim() || null
+            };
+            
+            if (!equipmentData.name || !equipmentData.type || !equipmentData.condition) {
+                showNotification('Please fill in all required fields', 'error');
+                return;
+            }
+            
+            equipment.push(equipmentData);
+            clearEquipmentForm();
+            showNotification('Equipment added successfully!', 'success');
+            updateDashboard();
+        }
+
+        function clearItemForm() {
+            document.getElementById('itemName').value = '';
+            document.getElementById('itemCategory').value = '';
+            document.getElementById('currentStock').value = '';
+            document.getElementById('unopenedStock').value = '';
+            document.getElementById('stockUnit').value = 'pieces';
+            document.getElementById('minStock').value = '';
+            document.getElementById('minUnopenedStock').value = '';
+            document.getElementById('maxStock').value = '';
+            document.getElementById('supplier').value = '';
+            document.getElementById('lastPurchase').value = '';
+            document.getElementById('ageMonths').value = '';
+            document.getElementById('maxAgeMonths').value = '';
+            document.getElementById('itemNotes').value = '';
+        }
+
+        function clearEquipmentForm() {
+            document.getElementById('equipmentName').value = '';
+            document.getElementById('equipmentType').value = '';
+            document.getElementById('equipmentCondition').value = '';
+            document.getElementById('lastMaintenance').value = '';
+            document.getElementById('maintenanceNotes').value = '';
+        }
+
+        function addStock(itemId) {
+            const item = inventory.find(i => i.id === itemId);
+            if (!item) return;
+            
+            // Create a simple modal-style prompt
+            const modalHtml = `
+                <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center;" id="addStockModal">
+                    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 400px; width: 90%;">
+                        <h3 style="margin-bottom: 20px; color: var(--dark-blue);">Add Stock: ${item.name}</h3>
+                        <p style="margin-bottom: 15px;">Current Stock: <strong>${item.current_stock} ${item.unit}</strong></p>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Amount to Add:</label>
+                            <input type="number" id="addStockAmount" min="1" max="999" value="1" 
+                                   style="width: 100%; padding: 12px; border: 2px solid var(--border-gray); border-radius: 8px; font-size: 16px;" 
+                                   inputmode="numeric" pattern="[0-9]*" placeholder="Enter quantity">
+                        </div>
+                        <div style="margin-bottom: 20px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Is this an unopened package?</label>
+                            <select id="isUnopenedPackage" style="width: 100%; padding: 12px; border: 2px solid var(--border-gray); border-radius: 8px; font-size: 16px;">
+                                <option value="no">❌ No - Add to current stock</option>
+                                <option value="yes">📦 Yes - Add to unopened stock</option>
+                            </select>
+                        </div>
+                        <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                            <button onclick="document.getElementById('addStockModal').remove()" 
+                                    style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer;">Cancel</button>
+                            <button onclick="confirmAddStock(${itemId})" 
+                                    style="padding: 12px 24px; background: var(--success-green); color: white; border: none; border-radius: 8px; cursor: pointer;">Add Stock</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.getElementById('addStockAmount').focus();
+        }
+
+        function confirmAddStock(itemId) {
+            const amount = parseInt(document.getElementById('addStockAmount').value);
+            const isUnopened = document.getElementById('isUnopenedPackage').value === 'yes';
+            
+            if (!amount || amount <= 0) {
+                showNotification('Please enter a valid amount', 'error');
+                return;
+            }
+            
+            const item = inventory.find(i => i.id === itemId);
+            if (item) {
+                if (isUnopened && item.unopened_stock !== undefined) {
+                    item.unopened_stock += amount;
+                    showNotification(`Added ${amount} ${item.unit} to unopened stock for ${item.name}`, 'success');
+                } else {
+                    item.current_stock += amount;
+                    showNotification(`Added ${amount} ${item.unit} to current stock for ${item.name}`, 'success');
+                }
+                
+                updateDashboard();
+                
+                // Refresh current view
+                const activeTab = document.querySelector('.tab.active').dataset.tab;
+                if (activeTab === 'supplies') displaySupplies();
+                if (activeTab === 'chemicals') displayChemicals();
+            }
+            
+            document.getElementById('addStockModal').remove();
+        }
+
+        function deleteItem(itemId) {
+            const item = inventory.find(i => i.id === itemId);
+            if (item && confirm(`Are you sure you want to delete ${item.name}?`)) {
+                inventory = inventory.filter(i => i.id !== itemId);
+                showNotification('Item deleted successfully!', 'success');
+                updateDashboard();
+                if (document.querySelector('.tab.active').dataset.tab === 'supplies') {
+                    displaySupplies();
+                } else if (document.querySelector('.tab.active').dataset.tab === 'chemicals') {
+                    displayChemicals();
+                }
+            }
+        }
+
+        function deleteEquipment(equipmentId) {
+            const item = equipment.find(e => e.id === equipmentId);
+            if (item && confirm(`Are you sure you want to delete ${item.name}?`)) {
+                equipment = equipment.filter(e => e.id !== equipmentId);
+                showNotification('Equipment deleted successfully!', 'success');
+                updateDashboard();
+                displayEquipment();
+            }
+        }
+
+        function generateShoppingList() {
+            const urgentItems = inventory.filter(item => {
+                const status = getStockStatus(item);
+                return status.level === 'critical' || status.level === 'low';
+            });
+            
+            if (urgentItems.length === 0) {
+                showNotification('No items need restocking!', 'success');
+                return;
+            }
+            
+            let shoppingList = 'SUNBURST HOOD CLEANING - URGENT SHOPPING LIST\\n';
+            shoppingList += '=' .repeat(50) + '\\n';
+            shoppingList += `Generated: ${new Date().toLocaleDateString()}\\n\\n`;
+            
+            // Group by category
+            const categories = {
+                'critical-consumables': 'CRITICAL CONSUMABLES (Must have unopened backup)',
+                'critical-chemicals': 'CRITICAL CHEMICALS',
+                'critical-ppe': 'CRITICAL PPE',
+                'critical-equipment': 'CRITICAL EQUIPMENT',
+                'critical-parts': 'CRITICAL PARTS',
+                'tools-losable': 'TOOLS (Replacements for lost/damaged)',
+                'consumable-tools': 'CONSUMABLE TOOLS',
+                'aging-equipment': 'AGING EQUIPMENT (Check for replacement)',
+                'replacement-parts': 'REPLACEMENT PARTS',
+                'electrical-components': 'ELECTRICAL COMPONENTS'
+            };
+            
+            Object.keys(categories).forEach(categoryKey => {
+                const categoryItems = urgentItems.filter(item => item.category === categoryKey);
+                if (categoryItems.length > 0) {
+                    shoppingList += `\\n🚨 ${categories[categoryKey]}:\\n`;
+                    shoppingList += '-'.repeat(30) + '\\n';
+                    
+                    categoryItems.forEach(item => {
+                        const status = getStockStatus(item);
+                        const needed = item.max_stock ? item.max_stock - item.current_stock : item.min_stock * 2 - item.current_stock;
+                        
+                        shoppingList += `□ ${item.name}\\n`;
+                        shoppingList += `  NEED: ${Math.max(needed, item.min_stock)} ${item.unit}\\n`;
+                        shoppingList += `  CURRENT: ${item.current_stock} ${item.unit}\\n`;
+                        
+                        if (item.min_unopened && item.unopened_stock < item.min_unopened) {
+                            shoppingList += `  ⚠️ NEED UNOPENED BACKUP: ${item.min_unopened - item.unopened_stock} ${item.unit}\\n`;
+                        }
+                        
+                        if (item.supplier) {
+                            shoppingList += `  SUPPLIER: ${item.supplier}\\n`;
+                        }
+                        
+                        if (status.issues.length > 0) {
+                            shoppingList += `  🚨 ISSUES: ${status.issues.join(', ')}\\n`;
+                        }
+                        
+                        shoppingList += '\\n';
+                    });
+                }
+            });
+            
+            shoppingList += '\\n' + '=' .repeat(50) + '\\n';
+            shoppingList += 'PRIORITY NOTES:\\n';
+            shoppingList += '• Items marked CRITICAL must be purchased immediately\\n';
+            shoppingList += '• Always maintain unopened backup for consumables\\n';
+            shoppingList += '• Check aging equipment for wear and damage\\n';
+            shoppingList += '• Replace tools that are lost, dull, or mis-shaped\\n';
+            
+            // Create download
+            const blob = new Blob([shoppingList], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `SUNBURST_URGENT_Shopping_List_${new Date().toISOString().split('T')[0]}.txt`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showNotification(`Urgent shopping list generated! ${urgentItems.length} items need attention.`, 'warning');
+        }
+
+        function initializeSystem() {
+            // Hood cleaning specific inventory with business rules
+            inventory = [
+                // CRITICAL CONSUMABLES (must have unopened backup)
+                {
+                    id: 1,
+                    name: 'Nitrile Gloves - Medium',
+                    category: 'critical-consumables',
+                    current_stock: 8,
+                    unopened_stock: 1,
+                    unit: 'boxes',
+                    min_stock: 10,
+                    min_unopened: 1,
+                    max_stock: 30,
+                    supplier: 'Safety Supply Plus',
+                    last_purchase: '2025-01-10',
+                    notes: 'Medium size, powder-free. CRITICAL - Must always have 1 unopened box'
+                },
+                {
+                    id: 2,
+                    name: 'Shop Rags - Heavy Duty',
+                    category: 'critical-consumables',
+                    current_stock: 45,
+                    unopened_stock: 0,
+                    unit: 'pieces',
+                    min_stock: 60,
+                    min_unopened: 1,
+                    max_stock: 200,
+                    supplier: 'Industrial Supply Co',
+                    last_purchase: '2025-01-01',
+                    notes: 'Heavy duty cotton rags. CRITICAL - Must have 1 unopened pack'
+                },
+                {
+                    id: 3,
+                    name: 'Visqueen Plastic Sheeting',
+                    category: 'critical-consumables',
+                    current_stock: 2,
+                    unopened_stock: 1,
+                    unit: 'rolls',
+                    min_stock: 4,
+                    min_unopened: 1,
+                    max_stock: 15,
+                    supplier: 'Home Depot',
+                    last_purchase: '2024-12-15',
+                    notes: '10ft x 100ft rolls. CRITICAL - Always need unopened backup'
+                },
+                {
+                    id: 4,
+                    name: 'Sodium Hydroxide',
+                    category: 'critical-chemicals',
+                    current_stock: 1,
+                    unopened_stock: 0,
+                    unit: 'bottles',
+                    min_stock: 3,
+                    min_unopened: 1,
+                    max_stock: 10,
+                    supplier: 'Industrial Chemicals LLC',
+                    last_purchase: '2024-11-30',
+                    notes: 'CRITICAL CHEMICAL - Essential for cleaning. Handle with extreme care'
+                },
+                {
+                    id: 5,
+                    name: 'Safety Boots - Size 10',
+                    category: 'critical-ppe',
+                    current_stock: 2,
+                    unopened_stock: 1,
+                    unit: 'pairs',
+                    min_stock: 2,
+                    min_unopened: 1,
+                    max_stock: 4,
+                    supplier: 'WorkSafe Supply',
+                    last_purchase: '2024-11-20',
+                    notes: 'CRITICAL PPE - Chemical resistant boots'
+                },
+                
+                // TOOLS - GET LOST/DAMAGED
+                {
+                    id: 6,
+                    name: 'Scrapers - Firm Blade (1.25"-1.5")',
+                    category: 'tools-losable',
+                    current_stock: 3,
+                    unit: 'pieces',
+                    min_stock: 2,
+                    max_stock: 8,
+                    supplier: 'Tool Supply Inc',
+                    last_purchase: '2024-12-05',
+                    notes: 'Get lost, dull, mis-shaped. Need minimum 2 firm scrapers'
+                },
+                {
+                    id: 7,
+                    name: 'Scrapers - Flexible Blade (1.25"-1.5")',
+                    category: 'tools-losable',
+                    current_stock: 1,
+                    unit: 'pieces',
+                    min_stock: 2,
+                    max_stock: 8,
+                    supplier: 'Tool Supply Inc',
+                    last_purchase: '2024-12-05',
+                    notes: 'Get lost, dull, mis-shaped. Need minimum 2 flexible scrapers'
+                },
+                {
+                    id: 8,
+                    name: 'Stainless Steel Scrubbers',
+                    category: 'consumable-tools',
+                    current_stock: 12,
+                    unit: 'pieces',
+                    min_stock: 20,
+                    max_stock: 50,
+                    supplier: 'Kitchen Supply Co',
+                    last_purchase: '2024-11-15',
+                    notes: 'CONSUMABLE - Get used up like visqueen and rags'
+                },
+                {
+                    id: 9,
+                    name: 'Magnetic Clips',
+                    category: 'tools-losable',
+                    current_stock: 6,
+                    unit: 'pieces',
+                    min_stock: 10,
+                    max_stock: 25,
+                    supplier: 'Hardware Plus',
+                    last_purchase: '2024-10-20',
+                    notes: 'Easily lost on job sites'
+                },
+                
+                // AGING EQUIPMENT
+                {
+                    id: 10,
+                    name: 'Water Hose - 50ft',
+                    category: 'aging-equipment',
+                    current_stock: 2,
+                    unit: 'pieces',
+                    min_stock: 2,
+                    max_stock: 4,
+                    supplier: 'Industrial Hose Co',
+                    last_purchase: '2024-08-15',
+                    age_months: 5,
+                    max_age_months: 24,
+                    notes: 'CRITICAL - Ages and rots. Check for cracks regularly'
+                },
+                {
+                    id: 11,
+                    name: 'Chemical Sprayer System',
+                    category: 'critical-equipment',
+                    current_stock: 1,
+                    unit: 'units',
+                    min_stock: 1,
+                    max_stock: 2,
+                    supplier: 'Spray Equipment LLC',
+                    last_purchase: '2024-06-01',
+                    age_months: 7,
+                    max_age_months: 36,
+                    notes: 'CRITICAL EQUIPMENT - Backup essential'
+                },
+                
+                // REPLACEMENT PARTS
+                {
+                    id: 12,
+                    name: 'Hood Fan Belts - Standard',
+                    category: 'replacement-parts',
+                    current_stock: 3,
+                    unit: 'pieces',
+                    min_stock: 5,
+                    max_stock: 15,
+                    supplier: 'HVAC Parts Supply',
+                    last_purchase: '2024-09-10',
+                    notes: 'For hood fan belt replacement services'
+                },
+                {
+                    id: 13,
+                    name: 'Electric Motor - 1/2 HP',
+                    category: 'replacement-parts',
+                    current_stock: 0,
+                    unit: 'units',
+                    min_stock: 1,
+                    max_stock: 2,
+                    supplier: 'Motor Supply Co',
+                    last_purchase: null,
+                    notes: 'CRITICAL - Need in stock for electric motor replacement'
+                },
+                {
+                    id: 14,
+                    name: 'Fan Blade Bearings - Assorted',
+                    category: 'replacement-parts',
+                    current_stock: 4,
+                    unit: 'pieces',
+                    min_stock: 6,
+                    max_stock: 20,
+                    supplier: 'Bearing Supply Inc',
+                    last_purchase: '2024-07-20',
+                    notes: 'For hood fan shaft maintenance'
+                },
+                {
+                    id: 15,
+                    name: 'O-Rings - Assorted Sizes',
+                    category: 'critical-parts',
+                    current_stock: 8,
+                    unit: 'pieces',
+                    min_stock: 15,
+                    max_stock: 50,
+                    supplier: 'Seal & Gasket Co',
+                    last_purchase: '2024-11-05',
+                    notes: 'CRITICAL - Essential for equipment repairs'
+                },
+                {
+                    id: 16,
+                    name: 'Light Switches - GFCI',
+                    category: 'electrical-components',
+                    current_stock: 2,
+                    unit: 'pieces',
+                    min_stock: 3,
+                    max_stock: 10,
+                    supplier: 'Electrical Supply Co',
+                    last_purchase: '2024-08-30',
+                    notes: 'For hood electrical repairs'
+                },
+                {
+                    id: 17,
+                    name: 'LED Headlight',
+                    category: 'critical-ppe',
+                    current_stock: 1,
+                    unit: 'pieces',
+                    min_stock: 2,
+                    max_stock: 4,
+                    supplier: 'Safety Gear Plus',
+                    last_purchase: '2024-10-10',
+                    notes: 'CRITICAL PPE - Essential for dark work areas'
+                }
+            ];
+            
+            equipment = [
+                {
+                    id: 1,
+                    name: 'Pressure Washer #1',
+                    type: 'pressure-washer',
+                    condition: 'good',
+                    last_maintenance: '2024-12-01',
+                    notes: 'Running well, oil changed recently'
+                },
+                {
+                    id: 2,
+                    name: 'High Pressure Hose - Main',
+                    type: 'hose',
+                    condition: 'fair',
+                    last_maintenance: '2024-10-15',
+                    notes: 'Small leak near connection, still usable but needs replacement soon'
+                },
+                {
+                    id: 3,
+                    name: 'Extension Ladder - 32ft',
+                    type: 'ladder',
+                    condition: 'excellent',
+                    last_maintenance: '2024-11-01',
+                    notes: 'Recently inspected, all locks working properly'
+                }
+            ];
+            
+            updateDashboard();
+            showNotification('Welcome to SUNBURST Inventory Management! 🎉', 'success');
+        }
+
+        // Event Listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    showTab(e.target.dataset.tab);
+                });
+            });
+            
+            initializeSystem();
+        });
+    </script>
+</body>
+</html>
