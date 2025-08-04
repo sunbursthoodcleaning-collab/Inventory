@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SUNBURST Inventory & Equipment Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -12,122 +13,176 @@
         }
 
         :root {
-            --primary-orange: #FF6B35;
-            --secondary-orange: #F7931E;
-            --dark-blue: #2c3e50;
-            --light-gray: #f8f9fa;
-            --border-gray: #e1e8ed;
-            --text-gray: #666;
-            --success-green: #28a745;
-            --warning-yellow: #ffc107;
-            --danger-red: #dc3545;
-            --info-blue: #17a2b8;
-            --shadow-light: 0 5px 15px rgba(0,0,0,0.1);
-            --shadow-medium: 0 10px 25px rgba(0,0,0,0.1);
-            --shadow-heavy: 0 20px 40px rgba(0,0,0,0.1);
-            --border-radius: 10px;
-            --border-radius-large: 20px;
-            --transition: all 0.3s ease;
+            --primary: #1E40AF;
+            --primary-light: #3B82F6; 
+            --primary-dark: #1E3A8A;
+            --secondary: #F59E0B;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --error: #EF4444;
+            --gray-50: #F9FAFB;
+            --gray-100: #F3F4F6;
+            --gray-200: #E5E7EB;
+            --gray-300: #D1D5DB;
+            --gray-400: #9CA3AF;
+            --gray-500: #6B7280;
+            --gray-600: #4B5563;
+            --gray-700: #374151;
+            --gray-800: #1F2937;
+            --gray-900: #111827;
+            --white: #FFFFFF;
+            --border-radius: 8px;
+            --border-radius-lg: 12px;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+            color: var(--gray-900);
+            line-height: 1.6;
+            font-feature-settings: 'cv11', 'ss01';
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .app-container {
             min-height: 100vh;
-            padding: 20px;
-            color: var(--dark-blue);
-        }
-
-        .container {
-            max-width: 1600px;
-            margin: 0 auto;
-            background: white;
-            border-radius: var(--border-radius-large);
-            box-shadow: var(--shadow-heavy);
-            overflow: hidden;
-        }
-
-        .header {
-            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
-            color: white;
-            padding: 40px 30px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .header h1 {
-            font-size: 2.5em;
-            margin-bottom: 10px;
-            font-weight: 700;
-        }
-
-        .header p {
-            opacity: 0.95;
-            font-size: 1.2em;
-        }
-
-        .notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            padding: 15px 20px;
-            border-radius: var(--border-radius);
-            color: white;
-            font-weight: 600;
-            z-index: 10000;
-            transform: translateX(400px);
-            transition: var(--transition);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .notification.show {
-            transform: translateX(0);
-        }
-
-        .notification.success { background: var(--success-green); }
-        .notification.error { background: var(--danger-red); }
-        .notification.warning { background: var(--warning-yellow); color: var(--dark-blue); }
-
-        .main-content {
-            padding: 40px;
-        }
-
-        .tabs {
             display: flex;
-            margin-bottom: 40px;
-            border-bottom: 3px solid var(--light-gray);
-            flex-wrap: wrap;
+            flex-direction: column;
         }
 
-        .tab {
-            padding: 18px 25px;
-            background: var(--light-gray);
-            border: none;
-            border-radius: var(--border-radius) var(--border-radius) 0 0;
-            margin-right: 8px;
-            margin-bottom: 8px;
-            cursor: pointer;
-            font-size: 14px;
+        /* Header */
+        .header {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            box-shadow: var(--shadow-sm);
+            z-index: 10;
+        }
+
+        .header-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 80px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
             font-weight: 600;
-            color: var(--text-gray);
-            transition: var(--transition);
+            font-size: 18px;
         }
 
-        .tab:hover {
-            background: #e9ecef;
-            transform: translateY(-2px);
+        .brand-text h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
         }
 
-        .tab.active {
-            background: var(--primary-orange);
-            color: white;
-            box-shadow: var(--shadow-light);
+        .brand-text p {
+            font-size: 14px;
+            color: var(--gray-500);
+            margin: 0;
         }
 
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: var(--white);
+            border-bottom: 1px solid var(--gray-200);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .nav-content {
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 0 32px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-tab {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 16px 24px;
+            border: none;
+            background: none;
+            color: var(--gray-600);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .nav-tab:hover {
+            color: var(--primary);
+            background: var(--gray-50);
+        }
+
+        .nav-tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            background: var(--gray-50);
+        }
+
+        .nav-tab-icon {
+            font-size: 16px;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            max-width: 1440px;
+            margin: 0 auto;
+            padding: 32px;
+            width: 100%;
+        }
+
+        /* Tab Content */
         .tab-content {
             display: none;
-            animation: fadeIn 0.5s ease-in-out;
+            animation: fadeIn 0.3s ease-in-out;
         }
 
         .tab-content.active {
@@ -135,559 +190,968 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 25px;
-            margin-bottom: 40px;
+            gap: 24px;
+            margin-bottom: 32px;
         }
 
-        .dashboard-card {
-            background: white;
-            padding: 30px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow-medium);
-            border-left: 5px solid var(--primary-orange);
-            transition: var(--transition);
+        .metric-card {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--gray-200);
+            transition: all 0.2s ease;
         }
 
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-heavy);
+        .metric-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
         }
 
-        .dashboard-card h3 {
-            color: var(--dark-blue);
-            margin-bottom: 20px;
-            font-size: 1.3em;
+        .metric-header {
             display: flex;
             align-items: center;
-        }
-
-        .inventory-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .inventory-item {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 20px;
-            box-shadow: var(--shadow-light);
-            border-left: 4px solid var(--border-gray);
-            transition: var(--transition);
-        }
-
-        .inventory-item:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-medium);
-        }
-
-        .inventory-item.low-stock {
-            border-left-color: var(--warning-yellow);
-            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
-        }
-
-        .inventory-item.critical-stock {
-            border-left-color: var(--danger-red);
-            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
-        }
-
-        .inventory-item.good-stock {
-            border-left-color: var(--success-green);
-        }
-
-        .item-header {
-            display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
+            margin-bottom: 16px;
         }
 
-        .item-name {
-            font-weight: 600;
-            color: var(--dark-blue);
-            font-size: 1.1em;
-        }
-
-        .stock-level {
-            padding: 5px 12px;
-            border-radius: 15px;
-            font-size: 12px;
-            font-weight: 700;
+        .metric-title {
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--gray-600);
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
-        .stock-level.good { background: var(--success-green); color: white; }
-        .stock-level.low { background: var(--warning-yellow); color: var(--dark-blue); }
-        .stock-level.critical { background: var(--danger-red); color: white; }
+        .metric-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            color: var(--white);
+        }
 
-        .item-details {
+        .metric-icon.inventory { background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); }
+        .metric-icon.equipment { background: linear-gradient(135deg, var(--secondary) 0%, #FCD34D 100%); }
+        .metric-icon.actions { background: linear-gradient(135deg, var(--success) 0%, #34D399 100%); }
+
+        .metric-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin-bottom: 8px;
+        }
+
+        .metric-details {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .metric-detail {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            align-items: center;
             font-size: 14px;
         }
 
-        .item-details strong {
-            color: var(--dark-blue);
+        .metric-detail-label {
+            color: var(--gray-600);
+        }
+
+        .metric-detail-value {
+            font-weight: 600;
+        }
+
+        .metric-detail-value.warning { color: var(--warning); }
+        .metric-detail-value.error { color: var(--error); }
+        .metric-detail-value.success { color: var(--success); }
+
+        /* Section Headers */
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: between;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--gray-200);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        /* Inventory Grid */
+        .inventory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 24px;
+        }
+
+        .inventory-card {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .inventory-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
+        }
+
+        .inventory-card.critical {
+            border-left: 4px solid var(--error);
+        }
+
+        .inventory-card.warning {
+            border-left: 4px solid var(--warning);
+        }
+
+        .inventory-card.good {
+            border-left: 4px solid var(--success);
+        }
+
+        .card-header {
+            padding: 20px 24px 16px;
+            border-bottom: 1px solid var(--gray-100);
+        }
+
+        .card-title-row {
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gray-900);
+            line-height: 1.4;
+        }
+
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .status-badge.critical {
+            background: #FEE2E2;
+            color: var(--error);
+        }
+
+        .status-badge.warning {
+            background: #FEF3C7;
+            color: #D97706;
+        }
+
+        .status-badge.good {
+            background: #D1FAE5;
+            color: var(--success);
+        }
+
+        .card-subtitle {
+            font-size: 14px;
+            color: var(--gray-500);
+        }
+
+        .card-content {
+            padding: 20px 24px;
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px 24px;
+            margin-bottom: 20px;
+        }
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-label {
+            font-size: 12px;
+            font-weight: 500;
+            color: var(--gray-500);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .detail-value {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--gray-900);
+        }
+
+        .detail-value.critical { color: var(--error); }
+        .detail-value.warning { color: var(--warning); }
+        .detail-value.success { color: var(--success); }
+
+        .progress-container {
+            margin: 16px 0;
         }
 
         .progress-bar {
             width: 100%;
-            height: 8px;
-            background: var(--light-gray);
-            border-radius: 4px;
+            height: 6px;
+            background: var(--gray-200);
+            border-radius: 3px;
             overflow: hidden;
-            margin: 10px 0;
         }
 
         .progress-fill {
             height: 100%;
-            transition: var(--transition);
+            transition: width 0.3s ease;
+            border-radius: 3px;
         }
 
-        .progress-fill.good { background: var(--success-green); }
-        .progress-fill.low { background: var(--warning-yellow); }
-        .progress-fill.critical { background: var(--danger-red); }
+        .progress-fill.critical { background: var(--error); }
+        .progress-fill.warning { background: var(--warning); }
+        .progress-fill.good { background: var(--success); }
 
+        .alert-box {
+            margin: 16px 0;
+            padding: 12px 16px;
+            border-radius: var(--border-radius);
+            font-size: 13px;
+            font-weight: 500;
+            background: #FEE2E2;
+            color: var(--error);
+            border: 1px solid #FECACA;
+        }
+
+        .notes-section {
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-100);
+        }
+
+        .notes-text {
+            font-size: 14px;
+            color: var(--gray-600);
+            line-height: 1.5;
+        }
+
+        .card-actions {
+            padding: 16px 24px;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-100);
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        /* Buttons */
         .btn {
-            background: linear-gradient(135deg, var(--primary-orange) 0%, var(--secondary-orange) 100%);
-            color: white;
-            padding: 12px 24px;
-            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 16px;
             border-radius: var(--border-radius);
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 500;
+            text-decoration: none;
             cursor: pointer;
-            transition: var(--transition);
-            box-shadow: var(--shadow-light);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+            white-space: nowrap;
         }
 
-        .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-medium);
+        .btn-primary {
+            background: var(--primary);
+            color: var(--white);
+            border-color: var(--primary);
         }
 
-        .btn-small {
-            padding: 8px 16px;
-            font-size: 12px;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
+        .btn-primary:hover {
+            background: var(--primary-dark);
+            border-color: var(--primary-dark);
+            transform: translateY(-1px);
         }
 
         .btn-success {
-            background: var(--success-green);
+            background: var(--success);
+            color: var(--white);
+            border-color: var(--success);
+        }
+
+        .btn-success:hover {
+            background: #059669;
+            border-color: #059669;
+            transform: translateY(-1px);
+        }
+
+        .btn-warning {
+            background: var(--warning);
+            color: var(--white);
+            border-color: var(--warning);
+        }
+
+        .btn-warning:hover {
+            background: #D97706;
+            border-color: #D97706;
+            transform: translateY(-1px);
         }
 
         .btn-danger {
-            background: var(--danger-red);
+            background: var(--error);
+            color: var(--white);
+            border-color: var(--error);
         }
 
-        .form-section {
-            background: var(--light-gray);
-            padding: 30px;
-            border-radius: var(--border-radius);
-            margin-bottom: 30px;
-            border-left: 5px solid var(--primary-orange);
+        .btn-danger:hover {
+            background: #DC2626;
+            border-color: #DC2626;
+            transform: translateY(-1px);
         }
 
-        .form-section h2 {
-            color: var(--dark-blue);
-            margin-bottom: 25px;
-            font-size: 1.5em;
+        .btn-secondary {
+            background: var(--white);
+            color: var(--gray-700);
+            border-color: var(--gray-300);
+        }
+
+        .btn-secondary:hover {
+            background: var(--gray-50);
+            border-color: var(--gray-400);
+            transform: translateY(-1px);
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        .btn-lg {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .btn-icon {
+            font-size: 16px;
+        }
+
+        /* Action Buttons in Header */
+        .action-buttons {
             display: flex;
-            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
         }
 
-        .form-row {
+        /* Forms */
+        .form-container {
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+        }
+
+        .form-header {
+            padding: 24px;
+            border-bottom: 1px solid var(--gray-200);
+            background: var(--gray-50);
+        }
+
+        .form-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-900);
+            margin: 0;
+        }
+
+        .form-content {
+            padding: 24px;
+        }
+
+        .form-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin-bottom: 20px;
+            gap: 24px;
+            margin-bottom: 24px;
         }
 
         .form-group {
-            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-            color: var(--dark-blue);
+        .form-label {
             font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            font-weight: 500;
+            color: var(--gray-700);
         }
 
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 12px 15px;
-            border: 2px solid var(--border-gray);
+        .form-label.required::after {
+            content: " *";
+            color: var(--error);
+        }
+
+        .form-input {
+            padding: 12px 16px;
+            border: 1px solid var(--gray-300);
             border-radius: var(--border-radius);
             font-size: 14px;
-            transition: var(--transition);
-            background: white;
+            transition: all 0.2s ease;
+            background: var(--white);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgb(59 130 246 / 0.1);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
             font-family: inherit;
         }
 
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: var(--primary-orange);
-            box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
+        .form-actions {
+            padding: 24px;
+            background: var(--gray-50);
+            border-top: 1px solid var(--gray-200);
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
         }
 
-        .equipment-status {
+        /* Equipment Cards */
+        .equipment-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
         }
 
         .equipment-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 25px;
-            box-shadow: var(--shadow-medium);
-            border-top: 4px solid var(--info-blue);
-            transition: var(--transition);
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--gray-200);
+            overflow: hidden;
+            transition: all 0.2s ease;
         }
 
         .equipment-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-heavy);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-1px);
         }
 
-        .equipment-card.needs-attention {
-            border-top-color: var(--warning-yellow);
-            background: linear-gradient(135deg, #fff8e1 0%, #ffffff 100%);
+        .equipment-card.excellent {
+            border-left: 4px solid var(--success);
+        }
+
+        .equipment-card.good {
+            border-left: 4px solid var(--success);
+        }
+
+        .equipment-card.fair {
+            border-left: 4px solid var(--warning);
+        }
+
+        .equipment-card.poor {
+            border-left: 4px solid var(--error);
         }
 
         .equipment-card.critical {
-            border-top-color: var(--danger-red);
-            background: linear-gradient(135deg, #ffebee 0%, #ffffff 100%);
+            border-left: 4px solid var(--error);
         }
 
-        .equipment-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
+        /* Empty States */
+        .empty-state {
+            text-align: center;
+            padding: 80px 40px;
+            color: var(--gray-500);
         }
 
-        .equipment-name {
-            font-size: 1.2em;
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--gray-700);
+            margin-bottom: 8px;
+        }
+
+        .empty-state-description {
+            font-size: 16px;
+            margin-bottom: 32px;
+        }
+
+        /* Notifications */
+        .notification {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            max-width: 400px;
+            padding: 16px 20px;
+            border-radius: var(--border-radius-lg);
+            color: var(--white);
+            font-weight: 500;
+            box-shadow: var(--shadow-lg);
+            z-index: 1000;
+            transform: translateX(500px);
+            transition: transform 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateX(0);
+        }
+
+        .notification.success {
+            background: var(--success);
+        }
+
+        .notification.error {
+            background: var(--error);
+        }
+
+        .notification.warning {
+            background: var(--warning);
+            color: var(--gray-900);
+        }
+
+        /* Success State */
+        .success-state {
+            text-align: center;
+            padding: 80px 40px;
+            background: var(--white);
+            border-radius: var(--border-radius-lg);
+            border: 1px solid var(--gray-200);
+        }
+
+        .success-state-icon {
+            font-size: 64px;
+            margin-bottom: 24px;
+            color: var(--success);
+        }
+
+        .success-state-title {
+            font-size: 24px;
             font-weight: 700;
-            color: var(--dark-blue);
+            color: var(--gray-900);
+            margin-bottom: 8px;
         }
 
-        .equipment-status-badge {
-            padding: 6px 12px;
-            border-radius: 15px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
+        .success-state-description {
+            font-size: 16px;
+            color: var(--gray-600);
         }
 
-        .status-good { background: var(--success-green); color: white; }
-        .status-fair { background: var(--warning-yellow); color: var(--dark-blue); }
-        .status-poor { background: var(--danger-red); color: white; }
-
-        .maintenance-items {
-            list-style: none;
-            margin: 15px 0;
-        }
-
-        .maintenance-items li {
-            padding: 8px 0;
-            border-bottom: 1px solid var(--border-gray);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .maintenance-items li:last-child {
-            border-bottom: none;
-        }
-
-        .status-icon {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            color: white;
-            font-weight: bold;
-        }
-
-        .status-icon.good { background: var(--success-green); }
-        .status-icon.warning { background: var(--warning-yellow); color: var(--dark-blue); }
-        .status-icon.critical { background: var(--danger-red); }
-
+        /* Responsive Design */
         @media (max-width: 768px) {
-            body { padding: 10px; }
-            .header { padding: 30px 20px; }
-            .header h1 { font-size: 2em; }
-            .main-content { padding: 20px; }
-            .tabs { flex-direction: column; }
-            .tab { margin-right: 0; }
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .form-row { grid-template-columns: 1fr; }
+            .header-content {
+                padding: 0 16px;
+                height: 64px;
+            }
+
+            .brand-text h1 {
+                font-size: 20px;
+            }
+
+            .nav-content {
+                padding: 0 16px;
+            }
+
+            .main-content {
+                padding: 16px;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .inventory-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .equipment-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+                gap: 12px;
+            }
+
+            .card-actions {
+                flex-direction: column;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-content {
+                flex-direction: column;
+                height: auto;
+                padding: 16px;
+                gap: 16px;
+            }
+
+            .brand {
+                flex-direction: column;
+                text-align: center;
+                gap: 8px;
+            }
+
+            .action-buttons {
+                width: 100%;
+            }
+
+            .btn {
+                justify-content: center;
+            }
         }
     </style>
 </head>
 <body>
     <div class="notification" id="notification"></div>
 
-    <div class="container">
-        <div class="header">
-            <h1>🏢 SUNBURST Inventory & Equipment Management</h1>
-            <p>Professional Supply & Maintenance Tracking System</p>
-        </div>
-
-        <div class="main-content">
-            <div class="tabs">
-                <button class="tab active" data-tab="dashboard">📊 Dashboard</button>
-                <button class="tab" data-tab="supplies">🧽 Supplies</button>
-                <button class="tab" data-tab="chemicals">🧪 Chemicals</button>
-                <button class="tab" data-tab="equipment">🔧 Equipment</button>
-                <button class="tab" data-tab="add-item">➕ Add Item</button>
-                <button class="tab" data-tab="maintenance">🛠️ Maintenance</button>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="brand">
+                    <div class="brand-icon">S</div>
+                    <div class="brand-text">
+                        <h1>SUNBURST</h1>
+                        <p>Inventory & Equipment Management</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <div class="action-buttons">
+                        <button class="btn btn-secondary btn-sm" onclick="showTab('maintenance')">
+                            <span class="btn-icon">⚙️</span>
+                            Schedule Maintenance
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="generateShoppingList()">
+                            <span class="btn-icon">📋</span>
+                            Generate Shopping List
+                        </button>
+                    </div>
+                </div>
             </div>
+        </header>
 
+        <!-- Navigation -->
+        <nav class="nav-container">
+            <div class="nav-content">
+                <div class="nav-tabs">
+                    <button class="nav-tab active" data-tab="dashboard">
+                        <span class="nav-tab-icon">📊</span>
+                        Dashboard
+                    </button>
+                    <button class="nav-tab" data-tab="supplies">
+                        <span class="nav-tab-icon">🧽</span>
+                        Supplies
+                    </button>
+                    <button class="nav-tab" data-tab="chemicals">
+                        <span class="nav-tab-icon">🧪</span>
+                        Chemicals
+                    </button>
+                    <button class="nav-tab" data-tab="equipment">
+                        <span class="nav-tab-icon">🔧</span>
+                        Equipment
+                    </button>
+                    <button class="nav-tab" data-tab="add-item">
+                        <span class="nav-tab-icon">➕</span>
+                        Add Item
+                    </button>
+                    <button class="nav-tab" data-tab="maintenance">
+                        <span class="nav-tab-icon">🛠️</span>
+                        Maintenance
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
             <!-- Dashboard Tab -->
             <div id="dashboard" class="tab-content active">
                 <div class="dashboard-grid">
-                    <div class="dashboard-card">
-                        <h3>📦 Inventory Overview</h3>
-                        <div class="item-details">
-                            <span>Total Items:</span>
-                            <strong id="totalItems">0</strong>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">Inventory Overview</span>
+                            <div class="metric-icon inventory">📦</div>
                         </div>
-                        <div class="item-details">
-                            <span>Low Stock Alerts:</span>
-                            <strong style="color: var(--warning-yellow);" id="lowStockCount">0</strong>
-                        </div>
-                        <div class="item-details">
-                            <span>Critical Stock:</span>
-                            <strong style="color: var(--danger-red);" id="criticalStockCount">0</strong>
-                        </div>
-                    </div>
-
-                    <div class="dashboard-card">
-                        <h3>🔧 Equipment Status</h3>
-                        <div class="item-details">
-                            <span>Total Equipment:</span>
-                            <strong id="totalEquipment">0</strong>
-                        </div>
-                        <div class="item-details">
-                            <span>Needs Attention:</span>
-                            <strong style="color: var(--warning-yellow);" id="equipmentWarnings">0</strong>
-                        </div>
-                        <div class="item-details">
-                            <span>Critical Issues:</span>
-                            <strong style="color: var(--danger-red);" id="equipmentCritical">0</strong>
+                        <div class="metric-value" id="totalItems">0</div>
+                        <div class="metric-details">
+                            <div class="metric-detail">
+                                <span class="metric-detail-label">Total Items</span>
+                                <span class="metric-detail-value" id="totalItemsDetail">0</span>
+                            </div>
+                            <div class="metric-detail">
+                                <span class="metric-detail-label">Low Stock</span>
+                                <span class="metric-detail-value warning" id="lowStockCount">0</span>
+                            </div>
+                            <div class="metric-detail">
+                                <span class="metric-detail-label">Critical</span>
+                                <span class="metric-detail-value error" id="criticalStockCount">0</span>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="dashboard-card">
-                        <h3>📋 Quick Actions</h3>
-                        <div style="display: flex; flex-direction: column; gap: 10px;">
-                            <button class="btn btn-small" onclick="showTab('add-item')">➕ Add New Item</button>
-                            <button class="btn btn-small btn-secondary" onclick="showTab('maintenance')">🛠️ Schedule Maintenance</button>
-                            <button class="btn btn-small btn-success" onclick="generateShoppingList()">🛒 Generate Shopping List</button>
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">Equipment Status</span>
+                            <div class="metric-icon equipment">🔧</div>
+                        </div>
+                        <div class="metric-value" id="totalEquipment">0</div>
+                        <div class="metric-details">
+                            <div class="metric-detail">
+                                <span class="metric-detail-label">Total Equipment</span>
+                                <span class="metric-detail-value" id="totalEquipmentDetail">0</span>
+                            </div>
+                            <div class="metric-detail">
+                                <span class="metric-detail-label">Needs Attention</span>
+                                <span class="metric-detail-value warning" id="equipmentWarnings">0</span>
+                            </div>
+                            <div class="metric-detail">
+                                <span class="metric-detail-label">Critical</span>
+                                <span class="metric-detail-value error" id="equipmentCritical">0</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-card">
+                        <div class="metric-header">
+                            <span class="metric-title">Quick Actions</span>
+                            <div class="metric-icon actions">⚡</div>
+                        </div>
+                        <div class="metric-details" style="gap: 12px;">
+                            <button class="btn btn-primary btn-sm" onclick="showTab('add-item')" style="width: 100%;">
+                                <span class="btn-icon">➕</span>
+                                Add New Item
+                            </button>
+                            <button class="btn btn-secondary btn-sm" onclick="showTab('maintenance')" style="width: 100%;">
+                                <span class="btn-icon">🛠️</span>
+                                Add Equipment
+                            </button>
                         </div>
                     </div>
                 </div>
 
-                <h2 style="margin-bottom: 20px; color: var(--dark-blue);">🚨 Items Needing Attention</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Items Requiring Attention</h2>
+                </div>
                 <div id="alertsContainer" class="inventory-grid"></div>
             </div>
 
             <!-- Supplies Tab -->
             <div id="supplies" class="tab-content">
-                <h2 style="margin-bottom: 20px; color: var(--dark-blue);">🧽 Cleaning Supplies</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Cleaning Supplies</h2>
+                </div>
                 <div id="suppliesContainer" class="inventory-grid"></div>
             </div>
 
             <!-- Chemicals Tab -->
             <div id="chemicals" class="tab-content">
-                <h2 style="margin-bottom: 20px; color: var(--dark-blue);">🧪 Chemicals & Detergents</h2>
+                <div class="section-header">
+                    <h2 class="section-title">Chemicals & Detergents</h2>
+                </div>
                 <div id="chemicalsContainer" class="inventory-grid"></div>
             </div>
 
             <!-- Equipment Tab -->
             <div id="equipment" class="tab-content">
-                <h2 style="margin-bottom: 20px; color: var(--dark-blue);">🔧 Equipment Status</h2>
-                <div id="equipmentContainer" class="equipment-status"></div>
+                <div class="section-header">
+                    <h2 class="section-title">Equipment Status</h2>
+                </div>
+                <div id="equipmentContainer" class="equipment-grid"></div>
             </div>
 
             <!-- Add Item Tab -->
             <div id="add-item" class="tab-content">
-                <div class="form-section">
-                    <h2>Add New Inventory Item</h2>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="itemName">Item Name *</label>
-                            <input type="text" id="itemName" required placeholder="e.g., Shop Rags, Degreaser">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2 class="form-title">Add New Inventory Item</h2>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="itemName" class="form-label required">Item Name</label>
+                                <input type="text" id="itemName" class="form-input" placeholder="e.g., Shop Rags, Degreaser">
+                            </div>
+                            <div class="form-group">
+                                <label for="itemCategory" class="form-label required">Category</label>
+                                <select id="itemCategory" class="form-input">
+                                    <option value="">Select Category</option>
+                                    <option value="supplies">Supplies</option>
+                                    <option value="chemicals">Chemicals</option>
+                                    <option value="equipment">Equipment</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="currentStock" class="form-label required">Current Stock</label>
+                                <input type="number" id="currentStock" class="form-input" min="0" placeholder="Current quantity">
+                            </div>
+                            <div class="form-group">
+                                <label for="unopenedStock" class="form-label">Unopened Stock</label>
+                                <input type="number" id="unopenedStock" class="form-input" min="0" placeholder="Unopened units">
+                            </div>
+                            <div class="form-group">
+                                <label for="stockUnit" class="form-label">Unit of Measurement</label>
+                                <select id="stockUnit" class="form-input">
+                                    <option value="pieces">Pieces</option>
+                                    <option value="boxes">Boxes</option>
+                                    <option value="rolls">Rolls</option>
+                                    <option value="bottles">Bottles</option>
+                                    <option value="gallons">Gallons</option>
+                                    <option value="pairs">Pairs</option>
+                                    <option value="units">Units</option>
+                                    <option value="pounds">Pounds</option>
+                                    <option value="feet">Feet</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="minUnopenedStock" class="form-label">Min Unopened Required</label>
+                                <input type="number" id="minUnopenedStock" class="form-input" min="0" placeholder="Minimum unopened">
+                            </div>
+                            <div class="form-group">
+                                <label for="minStock" class="form-label required">Minimum Stock Level</label>
+                                <input type="number" id="minStock" class="form-input" min="0" placeholder="Reorder when below">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxStock" class="form-label">Maximum Stock Level</label>
+                                <input type="number" id="maxStock" class="form-input" min="0" placeholder="Storage capacity">
+                            </div>
+                            <div class="form-group">
+                                <label for="supplier" class="form-label">Supplier/Brand</label>
+                                <input type="text" id="supplier" class="form-input" placeholder="Where to purchase">
+                            </div>
+                            <div class="form-group">
+                                <label for="lastPurchase" class="form-label">Last Purchase Date</label>
+                                <input type="date" id="lastPurchase" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label for="ageMonths" class="form-label">Age (Months)</label>
+                                <input type="number" id="ageMonths" class="form-input" min="0" placeholder="For aging equipment">
+                            </div>
+                            <div class="form-group">
+                                <label for="maxAgeMonths" class="form-label">Max Age (Months)</label>
+                                <input type="number" id="maxAgeMonths" class="form-input" min="0" placeholder="Replace after this age">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="itemCategory">Category *</label>
-                            <select id="itemCategory" required>
-                                <option value="">Select Category</option>
-                                <option value="supplies">Supplies</option>
-                                <option value="chemicals">Chemicals</option>
-                                <option value="equipment">Equipment</option>
-                            </select>
+                            <label for="itemNotes" class="form-label">Notes</label>
+                            <textarea id="itemNotes" class="form-input form-textarea" placeholder="Special instructions, storage requirements, etc."></textarea>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="currentStock">Current Stock *</label>
-                            <input type="number" id="currentStock" required min="0" max="9999" 
-                                   placeholder="Current quantity" inputmode="numeric" pattern="[0-9]*">
-                        </div>
-                        <div class="form-group">
-                            <label for="unopenedStock">Unopened Stock</label>
-                            <input type="number" id="unopenedStock" min="0" max="999" 
-                                   placeholder="Unopened units" inputmode="numeric" pattern="[0-9]*">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="stockUnit">Unit of Measurement</label>
-                            <select id="stockUnit">
-                                <option value="pieces">Pieces</option>
-                                <option value="boxes">Boxes</option>
-                                <option value="rolls">Rolls</option>
-                                <option value="bottles">Bottles</option>
-                                <option value="gallons">Gallons</option>
-                                <option value="pairs">Pairs</option>
-                                <option value="units">Units</option>
-                                <option value="pounds">Pounds</option>
-                                <option value="feet">Feet</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="minUnopenedStock">Min Unopened Required</label>
-                            <input type="number" id="minUnopenedStock" min="0" max="99" 
-                                   placeholder="Minimum unopened" inputmode="numeric" pattern="[0-9]*">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="minStock">Minimum Stock Level *</label>
-                            <input type="number" id="minStock" required min="0" max="9999" 
-                                   placeholder="Reorder when below" inputmode="numeric" pattern="[0-9]*">
-                        </div>
-                        <div class="form-group">
-                            <label for="maxStock">Maximum Stock Level</label>
-                            <input type="number" id="maxStock" min="0" max="9999" 
-                                   placeholder="Storage capacity" inputmode="numeric" pattern="[0-9]*">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="supplier">Supplier/Brand</label>
-                            <input type="text" id="supplier" placeholder="Where to purchase">
-                        </div>
-                        <div class="form-group">
-                            <label for="lastPurchase">Last Purchase Date</label>
-                            <input type="date" id="lastPurchase">
-                        </div>
-                    </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="ageMonths">Age (Months)</label>
-                            <input type="number" id="ageMonths" min="0" max="240" 
-                                   placeholder="For aging equipment" inputmode="numeric" pattern="[0-9]*">
-                        </div>
-                        <div class="form-group">
-                            <label for="maxAgeMonths">Max Age (Months)</label>
-                            <input type="number" id="maxAgeMonths" min="0" max="240" 
-                                   placeholder="Replace after this age" inputmode="numeric" pattern="[0-9]*">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="itemNotes">Notes</label>
-                        <textarea id="itemNotes" placeholder="Special instructions, storage requirements, etc."></textarea>
-                    </div>
-                    <div style="text-align: center; margin-top: 30px;">
-                        <button class="btn" onclick="saveItem()">💾 Save Item</button>
-                        <button class="btn btn-secondary" onclick="clearItemForm()" style="margin-left: 15px;">🗑️ Clear Form</button>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" onclick="clearItemForm()">
+                            <span class="btn-icon">🗑️</span>
+                            Clear Form
+                        </button>
+                        <button class="btn btn-primary" onclick="saveItem()">
+                            <span class="btn-icon">💾</span>
+                            Save Item
+                        </button>
                     </div>
                 </div>
             </div>
 
             <!-- Maintenance Tab -->
             <div id="maintenance" class="tab-content">
-                <div class="form-section">
-                    <h2>Equipment Maintenance</h2>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="equipmentName">Equipment Name *</label>
-                            <input type="text" id="equipmentName" required placeholder="e.g., Pressure Washer #1">
+                <div class="form-container">
+                    <div class="form-header">
+                        <h2 class="form-title">Equipment Maintenance</h2>
+                    </div>
+                    <div class="form-content">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="equipmentName" class="form-label required">Equipment Name</label>
+                                <input type="text" id="equipmentName" class="form-input" placeholder="e.g., Pressure Washer #1">
+                            </div>
+                            <div class="form-group">
+                                <label for="equipmentType" class="form-label required">Equipment Type</label>
+                                <select id="equipmentType" class="form-input">
+                                    <option value="">Select Type</option>
+                                    <option value="pressure-washer">Pressure Washer</option>
+                                    <option value="hose">Hose (Pressure/Garden)</option>
+                                    <option value="ladder">Ladder</option>
+                                    <option value="pump">Pump</option>
+                                    <option value="vehicle">Vehicle</option>
+                                    <option value="generator">Generator</option>
+                                    <option value="other">Other Equipment</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="equipmentCondition" class="form-label required">Overall Condition</label>
+                                <select id="equipmentCondition" class="form-input">
+                                    <option value="">Select Condition</option>
+                                    <option value="excellent">✅ Excellent - Like New</option>
+                                    <option value="good">✅ Good - Working Well</option>
+                                    <option value="fair">⚠️ Fair - Shows Wear</option>
+                                    <option value="poor">🔴 Poor - Needs Attention</option>
+                                    <option value="critical">🚨 Critical - Replace Soon</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="lastMaintenance" class="form-label">Last Maintenance</label>
+                                <input type="date" id="lastMaintenance" class="form-input">
+                            </div>
                         </div>
                         <div class="form-group">
-                            <label for="equipmentType">Equipment Type *</label>
-                            <select id="equipmentType" required>
-                                <option value="">Select Type</option>
-                                <option value="pressure-washer">Pressure Washer</option>
-                                <option value="hose">Hose (Pressure/Garden)</option>
-                                <option value="ladder">Ladder</option>
-                                <option value="pump">Pump</option>
-                                <option value="vehicle">Vehicle</option>
-                                <option value="generator">Generator</option>
-                                <option value="other">Other Equipment</option>
-                            </select>
+                            <label for="maintenanceNotes" class="form-label">Maintenance Notes</label>
+                            <textarea id="maintenanceNotes" class="form-input form-textarea" placeholder="Oil change needed, spark plug replaced, hose has small leak but usable, etc."></textarea>
                         </div>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="equipmentCondition">Overall Condition *</label>
-                            <select id="equipmentCondition" required style="font-size: 16px;">
-                                <option value="">Select Condition</option>
-                                <option value="excellent">✅ Excellent - Like New</option>
-                                <option value="good">✅ Good - Working Well</option>
-                                <option value="fair">⚠️ Fair - Shows Wear</option>
-                                <option value="poor">🔴 Poor - Needs Attention</option>
-                                <option value="critical">🚨 Critical - Replace Soon</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label for="lastMaintenance">Last Maintenance</label>
-                            <input type="date" id="lastMaintenance">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="maintenanceNotes">Maintenance Notes</label>
-                        <textarea id="maintenanceNotes" placeholder="Oil change needed, spark plug replaced, hose has small leak but usable, etc."></textarea>
-                    </div>
-                    <div style="text-align: center; margin-top: 30px;">
-                        <button class="btn" onclick="saveEquipment()">🔧 Save Equipment</button>
-                        <button class="btn btn-secondary" onclick="clearEquipmentForm()" style="margin-left: 15px;">🗑️ Clear Form</button>
+                    <div class="form-actions">
+                        <button class="btn btn-secondary" onclick="clearEquipmentForm()">
+                            <span class="btn-icon">🗑️</span>
+                            Clear Form
+                        </button>
+                        <button class="btn btn-primary" onclick="saveEquipment()">
+                            <span class="btn-icon">🔧</span>
+                            Save Equipment
+                        </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
 
     <script>
@@ -710,7 +1174,7 @@
                 content.classList.remove('active');
             });
             
-            document.querySelectorAll('.tab').forEach(tab => {
+            document.querySelectorAll('.nav-tab').forEach(tab => {
                 tab.classList.remove('active');
             });
             
@@ -732,16 +1196,14 @@
             let issues = [];
             let overallStatus = 'good';
             
-            // Check basic stock levels
             if (item.current_stock <= 0) {
                 issues.push('OUT OF STOCK');
                 overallStatus = 'critical';
             } else if (item.current_stock <= item.min_stock) {
                 issues.push('LOW STOCK');
-                if (overallStatus !== 'critical') overallStatus = 'low';
+                if (overallStatus !== 'critical') overallStatus = 'warning';
             }
             
-            // Check unopened stock requirements
             if (item.min_unopened && item.unopened_stock !== undefined) {
                 if (item.unopened_stock < item.min_unopened) {
                     issues.push('NO UNOPENED BACKUP');
@@ -749,7 +1211,6 @@
                 }
             }
             
-            // Check age for aging equipment
             if (item.age_months && item.max_age_months) {
                 const agePercentage = (item.age_months / item.max_age_months) * 100;
                 if (agePercentage >= 90) {
@@ -757,7 +1218,7 @@
                     overallStatus = 'critical';
                 } else if (agePercentage >= 70) {
                     issues.push('AGING');
-                    if (overallStatus !== 'critical') overallStatus = 'low';
+                    if (overallStatus !== 'critical') overallStatus = 'warning';
                 }
             }
             
@@ -785,53 +1246,82 @@
             const categoryIcon = getCategoryIcon(item.category);
             
             return `
-                <div class="inventory-item ${status.level}-stock">
-                    <div class="item-header">
-                        <span class="item-name">${categoryIcon} ${item.name}</span>
-                        <span class="stock-level ${status.level}">${status.text}</span>
+                <div class="inventory-card ${status.level}">
+                    <div class="card-header">
+                        <div class="card-title-row">
+                            <div class="card-title">${categoryIcon} ${item.name}</div>
+                            <div class="status-badge ${status.level}">${status.text}</div>
+                        </div>
+                        <div class="card-subtitle">${item.category.charAt(0).toUpperCase() + item.category.slice(1)}</div>
                     </div>
-                    <div class="item-details">
-                        <span>Current Stock:</span>
-                        <strong>${item.current_stock} ${item.unit}</strong>
+                    <div class="card-content">
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Current Stock</div>
+                                <div class="detail-value">${item.current_stock} ${item.unit}</div>
+                            </div>
+                            ${item.unopened_stock !== undefined ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Unopened</div>
+                                <div class="detail-value ${item.unopened_stock >= (item.min_unopened || 0) ? 'success' : 'critical'}">
+                                    ${item.unopened_stock} ${item.unit}
+                                </div>
+                            </div>` : ''}
+                            <div class="detail-item">
+                                <div class="detail-label">Minimum Level</div>
+                                <div class="detail-value">${item.min_stock} ${item.unit}</div>
+                            </div>
+                            ${item.max_stock ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Maximum Level</div>
+                                <div class="detail-value">${item.max_stock} ${item.unit}</div>
+                            </div>` : ''}
+                            ${item.age_months ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Age</div>
+                                <div class="detail-value ${item.age_months >= (item.max_age_months * 0.7) ? 'warning' : 'success'}">
+                                    ${item.age_months} months
+                                </div>
+                            </div>` : ''}
+                            ${item.supplier ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Supplier</div>
+                                <div class="detail-value">${item.supplier}</div>
+                            </div>` : ''}
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill ${status.level}" style="width: ${Math.min(status.percentage, 100)}%"></div>
+                            </div>
+                        </div>
+                        ${status.issues.length > 0 ? `
+                        <div class="alert-box">
+                            ⚠️ ISSUES: ${status.issues.join(', ')}
+                        </div>` : ''}
+                        ${item.notes ? `
+                        <div class="notes-section">
+                            <div class="detail-label">Notes</div>
+                            <div class="notes-text">${item.notes}</div>
+                        </div>` : ''}
                     </div>
-                    ${item.unopened_stock !== undefined ? `
-                    <div class="item-details">
-                        <span>Unopened:</span>
-                        <strong style="color: ${item.unopened_stock >= (item.min_unopened || 0) ? 'var(--success-green)' : 'var(--danger-red)'}">
-                            ${item.unopened_stock} ${item.unit} ${item.min_unopened ? `(need ${item.min_unopened})` : ''}
-                        </strong>
-                    </div>` : ''}
-                    <div class="item-details">
-                        <span>Minimum Level:</span>
-                        <strong>${item.min_stock} ${item.unit}</strong>
-                    </div>
-                    ${item.max_stock ? `
-                    <div class="item-details">
-                        <span>Maximum Level:</span>
-                        <strong>${item.max_stock} ${item.unit}</strong>
-                    </div>` : ''}
-                    ${item.age_months ? `
-                    <div class="item-details">
-                        <span>Age:</span>
-                        <strong style="color: ${item.age_months >= (item.max_age_months * 0.7) ? 'var(--warning-yellow)' : 'var(--success-green)'}">
-                            ${item.age_months} months ${item.max_age_months ? `(max ${item.max_age_months})` : ''}
-                        </strong>
-                    </div>` : ''}
-                    <div class="progress-bar">
-                        <div class="progress-fill ${status.level}" style="width: ${Math.min(status.percentage, 100)}%"></div>
-                    </div>
-                    ${item.supplier ? `<div class="item-details"><span>Supplier:</span> <strong>${item.supplier}</strong></div>` : ''}
-                    ${item.last_purchase ? `<div class="item-details"><span>Last Purchase:</span> <strong>${new Date(item.last_purchase).toLocaleDateString()}</strong></div>` : ''}
-                    ${status.issues.length > 0 ? `
-                    <div style="margin: 10px 0; padding: 8px; background: var(--danger-red); color: white; border-radius: 5px; font-size: 12px; font-weight: bold;">
-                        ⚠️ ISSUES: ${status.issues.join(', ')}
-                    </div>` : ''}
-                    ${item.notes ? `<div class="item-details" style="margin-top: 10px;"><span>Notes:</span> ${item.notes}</div>` : ''}
-                    <div style="margin-top: 15px; display: flex; gap: 10px; flex-wrap: wrap;">
-                        <button class="btn btn-small" onclick="editItem(${item.id})">✏️ Edit</button>
-                        <button class="btn btn-small btn-success" onclick="addStock(${item.id})">➕ Add Stock</button>
-                        ${item.unopened_stock !== undefined ? `<button class="btn btn-small" onclick="openPackage(${item.id})">📦 Open Package</button>` : ''}
-                        <button class="btn btn-small btn-danger" onclick="deleteItem(${item.id})">🗑️ Delete</button>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="editItem(${item.id})">
+                            <span class="btn-icon">✏️</span>
+                            Edit
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="addStock(${item.id})">
+                            <span class="btn-icon">➕</span>
+                            Add Stock
+                        </button>
+                        ${item.unopened_stock !== undefined ? `
+                        <button class="btn btn-warning btn-sm" onclick="openPackage(${item.id})">
+                            <span class="btn-icon">📦</span>
+                            Open Package
+                        </button>` : ''}
+                        <button class="btn btn-danger btn-sm" onclick="deleteItem(${item.id})">
+                            <span class="btn-icon">🗑️</span>
+                            Delete
+                        </button>
                     </div>
                 </div>
             `;
@@ -839,40 +1329,57 @@
 
         function createEquipmentCard(item) {
             const conditionMap = {
-                'excellent': { status: 'good', text: 'Excellent', icon: '✅' },
+                'excellent': { status: 'excellent', text: 'Excellent', icon: '✅' },
                 'good': { status: 'good', text: 'Good', icon: '✅' },
                 'fair': { status: 'fair', text: 'Fair', icon: '⚠️' },
                 'poor': { status: 'poor', text: 'Poor', icon: '🔴' },
-                'critical': { status: 'poor', text: 'Critical', icon: '🚨' }
+                'critical': { status: 'critical', text: 'Critical', icon: '🚨' }
             };
             
             const conditionInfo = conditionMap[item.condition] || conditionMap['good'];
             
             return `
-                <div class="equipment-card ${conditionInfo.status === 'poor' ? 'critical' : conditionInfo.status === 'fair' ? 'needs-attention' : ''}">
-                    <div class="equipment-header">
-                        <span class="equipment-name">${item.name}</span>
-                        <span class="equipment-status-badge status-${conditionInfo.status}">
-                            ${conditionInfo.icon} ${conditionInfo.text}
-                        </span>
+                <div class="equipment-card ${conditionInfo.status}">
+                    <div class="card-header">
+                        <div class="card-title-row">
+                            <div class="card-title">${item.name}</div>
+                            <div class="status-badge ${conditionInfo.status === 'excellent' || conditionInfo.status === 'good' ? 'good' : conditionInfo.status === 'fair' ? 'warning' : 'critical'}">
+                                ${conditionInfo.icon} ${conditionInfo.text}
+                            </div>
+                        </div>
+                        <div class="card-subtitle">${item.type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
                     </div>
-                    <div class="item-details">
-                        <span>Type:</span>
-                        <strong>${item.type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</strong>
+                    <div class="card-content">
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <div class="detail-label">Equipment Type</div>
+                                <div class="detail-value">${item.type.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</div>
+                            </div>
+                            ${item.last_maintenance ? `
+                            <div class="detail-item">
+                                <div class="detail-label">Last Maintenance</div>
+                                <div class="detail-value">${new Date(item.last_maintenance).toLocaleDateString()}</div>
+                            </div>` : ''}
+                        </div>
+                        ${item.notes ? `
+                        <div class="notes-section">
+                            <div class="detail-label">Maintenance Notes</div>
+                            <div class="notes-text">${item.notes}</div>
+                        </div>` : ''}
                     </div>
-                    ${item.last_maintenance ? `
-                    <div class="item-details">
-                        <span>Last Maintenance:</span>
-                        <strong>${new Date(item.last_maintenance).toLocaleDateString()}</strong>
-                    </div>` : ''}
-                    ${item.notes ? `
-                    <div style="margin: 15px 0; padding: 10px; background: var(--light-gray); border-radius: 5px; font-size: 14px;">
-                        <strong>Notes:</strong> ${item.notes}
-                    </div>` : ''}
-                    <div style="margin-top: 15px; display: flex; gap: 10px;">
-                        <button class="btn btn-small" onclick="editEquipment(${item.id})">✏️ Edit</button>
-                        <button class="btn btn-small btn-success" onclick="logMaintenance(${item.id})">🔧 Log Maintenance</button>
-                        <button class="btn btn-small btn-danger" onclick="deleteEquipment(${item.id})">🗑️ Delete</button>
+                    <div class="card-actions">
+                        <button class="btn btn-secondary btn-sm" onclick="editEquipment(${item.id})">
+                            <span class="btn-icon">✏️</span>
+                            Edit
+                        </button>
+                        <button class="btn btn-success btn-sm" onclick="logMaintenance(${item.id})">
+                            <span class="btn-icon">🔧</span>
+                            Log Maintenance
+                        </button>
+                        <button class="btn btn-danger btn-sm" onclick="deleteEquipment(${item.id})">
+                            <span class="btn-icon">🗑️</span>
+                            Delete
+                        </button>
                     </div>
                 </div>
             `;
@@ -881,13 +1388,12 @@
         function updateDashboard() {
             const totalItems = inventory.length;
             
-            // Count items with issues using the new status system
             let lowStock = 0;
             let criticalStock = 0;
             
             inventory.forEach(item => {
                 const status = getStockStatus(item);
-                if (status.level === 'low') lowStock++;
+                if (status.level === 'warning') lowStock++;
                 if (status.level === 'critical') criticalStock++;
             });
             
@@ -896,16 +1402,17 @@
             const equipmentCritical = equipment.filter(item => item.condition === 'critical').length;
             
             document.getElementById('totalItems').textContent = totalItems;
+            document.getElementById('totalItemsDetail').textContent = totalItems;
             document.getElementById('lowStockCount').textContent = lowStock;
             document.getElementById('criticalStockCount').textContent = criticalStock;
             document.getElementById('totalEquipment').textContent = totalEquipment;
+            document.getElementById('totalEquipmentDetail').textContent = totalEquipment;
             document.getElementById('equipmentWarnings').textContent = equipmentWarnings;
             document.getElementById('equipmentCritical').textContent = equipmentCritical;
             
-            // Show items needing attention
             const alertItems = inventory.filter(item => {
                 const status = getStockStatus(item);
-                return status.level === 'critical' || status.level === 'low';
+                return status.level === 'critical' || status.level === 'warning';
             });
             
             const alertEquipment = equipment.filter(item => item.condition === 'poor' || item.condition === 'critical');
@@ -913,10 +1420,10 @@
             const alertsContainer = document.getElementById('alertsContainer');
             if (alertItems.length === 0 && alertEquipment.length === 0) {
                 alertsContainer.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1;">
-                        <div style="font-size: 3em; margin-bottom: 15px;">🎉</div>
-                        <h3>All Systems Green!</h3>
-                        <p>No items need immediate attention.</p>
+                    <div class="success-state">
+                        <div class="success-state-icon">🎉</div>
+                        <h3 class="success-state-title">All Systems Green!</h3>
+                        <p class="success-state-description">No items need immediate attention.</p>
                     </div>
                 `;
             } else {
@@ -933,11 +1440,14 @@
             
             if (supplies.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1;">
-                        <div style="font-size: 3em; margin-bottom: 15px;">🧽</div>
-                        <h3>No Supplies Added</h3>
-                        <p>Add your first supply item to get started!</p>
-                        <button class="btn" onclick="showTab('add-item')" style="margin-top: 15px;">➕ Add Supply Item</button>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🧽</div>
+                        <h3 class="empty-state-title">No Supplies Added</h3>
+                        <p class="empty-state-description">Add your first supply item to get started!</p>
+                        <button class="btn btn-primary" onclick="showTab('add-item')">
+                            <span class="btn-icon">➕</span>
+                            Add Supply Item
+                        </button>
                     </div>
                 `;
             } else {
@@ -951,11 +1461,14 @@
             
             if (chemicals.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1;">
-                        <div style="font-size: 3em; margin-bottom: 15px;">🧪</div>
-                        <h3>No Chemicals Added</h3>
-                        <p>Add your first chemical/detergent to get started!</p>
-                        <button class="btn" onclick="showTab('add-item')" style="margin-top: 15px;">➕ Add Chemical Item</button>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🧪</div>
+                        <h3 class="empty-state-title">No Chemicals Added</h3>
+                        <p class="empty-state-description">Add your first chemical/detergent to get started!</p>
+                        <button class="btn btn-primary" onclick="showTab('add-item')">
+                            <span class="btn-icon">➕</span>
+                            Add Chemical Item
+                        </button>
                     </div>
                 `;
             } else {
@@ -968,11 +1481,14 @@
             
             if (equipment.length === 0) {
                 container.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--text-gray); grid-column: 1 / -1;">
-                        <div style="font-size: 3em; margin-bottom: 15px;">🔧</div>
-                        <h3>No Equipment Added</h3>
-                        <p>Add your first equipment item to get started!</p>
-                        <button class="btn" onclick="showTab('maintenance')" style="margin-top: 15px;">➕ Add Equipment</button>
+                    <div class="empty-state">
+                        <div class="empty-state-icon">🔧</div>
+                        <h3 class="empty-state-title">No Equipment Added</h3>
+                        <p class="empty-state-description">Add your first equipment item to get started!</p>
+                        <button class="btn btn-primary" onclick="showTab('maintenance')">
+                            <span class="btn-icon">➕</span>
+                            Add Equipment
+                        </button>
                     </div>
                 `;
             } else {
@@ -1007,23 +1523,6 @@
             clearItemForm();
             showNotification('Item added successfully!', 'success');
             updateDashboard();
-        }
-
-        function openPackage(itemId) {
-            const item = inventory.find(i => i.id === itemId);
-            if (item && item.unopened_stock > 0) {
-                if (confirm(`Open 1 package of ${item.name}? This will move it from unopened to current stock.`)) {
-                    item.unopened_stock -= 1;
-                    item.current_stock += 1; // Assuming 1 package = 1 unit, adjust as needed
-                    showNotification(`Opened 1 package of ${item.name}`, 'success');
-                    updateDashboard();
-                    
-                    // Refresh current view
-                    const activeTab = document.querySelector('.tab.active').dataset.tab;
-                    if (activeTab === 'supplies') displaySupplies();
-                    if (activeTab === 'chemicals') displayChemicals();
-                }
-            }
         }
 
         function saveEquipment() {
@@ -1075,30 +1574,29 @@
             const item = inventory.find(i => i.id === itemId);
             if (!item) return;
             
-            // Create a simple modal-style prompt
             const modalHtml = `
                 <div style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 10000; display: flex; align-items: center; justify-content: center;" id="addStockModal">
-                    <div style="background: white; padding: 30px; border-radius: 15px; max-width: 400px; width: 90%;">
-                        <h3 style="margin-bottom: 20px; color: var(--dark-blue);">Add Stock: ${item.name}</h3>
-                        <p style="margin-bottom: 15px;">Current Stock: <strong>${item.current_stock} ${item.unit}</strong></p>
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Amount to Add:</label>
+                    <div style="background: white; padding: 32px; border-radius: 12px; max-width: 480px; width: 90%; box-shadow: var(--shadow-xl);">
+                        <h3 style="margin-bottom: 24px; color: var(--gray-900); font-size: 20px; font-weight: 600;">Add Stock: ${item.name}</h3>
+                        <p style="margin-bottom: 20px; color: var(--gray-600);">Current Stock: <strong>${item.current_stock} ${item.unit}</strong></p>
+                        <div style="margin-bottom: 24px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">Amount to Add:</label>
                             <input type="number" id="addStockAmount" min="1" max="999" value="1" 
-                                   style="width: 100%; padding: 12px; border: 2px solid var(--border-gray); border-radius: 8px; font-size: 16px;" 
-                                   inputmode="numeric" pattern="[0-9]*" placeholder="Enter quantity">
+                                   style="width: 100%; padding: 12px 16px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 16px;" 
+                                   placeholder="Enter quantity">
                         </div>
-                        <div style="margin-bottom: 20px;">
-                            <label style="display: block; margin-bottom: 8px; font-weight: 600;">Is this an unopened package?</label>
-                            <select id="isUnopenedPackage" style="width: 100%; padding: 12px; border: 2px solid var(--border-gray); border-radius: 8px; font-size: 16px;">
+                        <div style="margin-bottom: 32px;">
+                            <label style="display: block; margin-bottom: 8px; font-weight: 500; color: var(--gray-700);">Is this an unopened package?</label>
+                            <select id="isUnopenedPackage" style="width: 100%; padding: 12px 16px; border: 1px solid var(--gray-300); border-radius: 8px; font-size: 16px;">
                                 <option value="no">❌ No - Add to current stock</option>
                                 <option value="yes">📦 Yes - Add to unopened stock</option>
                             </select>
                         </div>
-                        <div style="display: flex; gap: 15px; justify-content: flex-end;">
+                        <div style="display: flex; gap: 12px; justify-content: flex-end;">
                             <button onclick="document.getElementById('addStockModal').remove()" 
-                                    style="padding: 12px 24px; background: #6c757d; color: white; border: none; border-radius: 8px; cursor: pointer;">Cancel</button>
+                                    class="btn btn-secondary">Cancel</button>
                             <button onclick="confirmAddStock(${itemId})" 
-                                    style="padding: 12px 24px; background: var(--success-green); color: white; border: none; border-radius: 8px; cursor: pointer;">Add Stock</button>
+                                    class="btn btn-success">Add Stock</button>
                         </div>
                     </div>
                 </div>
@@ -1126,217 +1624,3 @@
                     item.current_stock += amount;
                     showNotification(`Added ${amount} ${item.unit} to current stock for ${item.name}`, 'success');
                 }
-                
-                updateDashboard();
-                
-                // Refresh current view
-                const activeTab = document.querySelector('.tab.active').dataset.tab;
-                if (activeTab === 'supplies') displaySupplies();
-                if (activeTab === 'chemicals') displayChemicals();
-            }
-            
-            document.getElementById('addStockModal').remove();
-        }
-
-        function deleteItem(itemId) {
-            const item = inventory.find(i => i.id === itemId);
-            if (item && confirm(`Are you sure you want to delete ${item.name}?`)) {
-                inventory = inventory.filter(i => i.id !== itemId);
-                showNotification('Item deleted successfully!', 'success');
-                updateDashboard();
-                if (document.querySelector('.tab.active').dataset.tab === 'supplies') {
-                    displaySupplies();
-                } else if (document.querySelector('.tab.active').dataset.tab === 'chemicals') {
-                    displayChemicals();
-                }
-            }
-        }
-
-        function deleteEquipment(equipmentId) {
-            const item = equipment.find(e => e.id === equipmentId);
-            if (item && confirm(`Are you sure you want to delete ${item.name}?`)) {
-                equipment = equipment.filter(e => e.id !== equipmentId);
-                showNotification('Equipment deleted successfully!', 'success');
-                updateDashboard();
-                displayEquipment();
-            }
-        }
-
-        // Placeholder functions for incomplete features
-        function editItem(itemId) {
-            showNotification('Edit feature coming soon!', 'warning');
-        }
-
-        function editEquipment(equipmentId) {
-            showNotification('Edit equipment feature coming soon!', 'warning');
-        }
-
-        function logMaintenance(equipmentId) {
-            showNotification('Log maintenance feature coming soon!', 'warning');
-        }
-
-        function generateShoppingList() {
-            const urgentItems = inventory.filter(item => {
-                const status = getStockStatus(item);
-                return status.level === 'critical' || status.level === 'low';
-            });
-            
-            if (urgentItems.length === 0) {
-                showNotification('No items need restocking!', 'success');
-                return;
-            }
-            
-            let shoppingList = 'SUNBURST HOOD CLEANING - URGENT SHOPPING LIST\n';
-            shoppingList += '='.repeat(50) + '\n';
-            shoppingList += `Generated: ${new Date().toLocaleDateString()}\n\n`;
-            
-            // Group by category
-            const categories = {
-                'supplies': 'CLEANING SUPPLIES',
-                'chemicals': 'CHEMICALS & DETERGENTS',
-                'equipment': 'EQUIPMENT'
-            };
-            
-            Object.keys(categories).forEach(categoryKey => {
-                const categoryItems = urgentItems.filter(item => item.category === categoryKey);
-                if (categoryItems.length > 0) {
-                    shoppingList += `\n🚨 ${categories[categoryKey]}:\n`;
-                    shoppingList += '-'.repeat(30) + '\n';
-                    
-                    categoryItems.forEach(item => {
-                        const status = getStockStatus(item);
-                        const needed = item.max_stock ? item.max_stock - item.current_stock : item.min_stock * 2 - item.current_stock;
-                        
-                        shoppingList += `□ ${item.name}\n`;
-                        shoppingList += `  NEED: ${Math.max(needed, item.min_stock)} ${item.unit}\n`;
-                        shoppingList += `  CURRENT: ${item.current_stock} ${item.unit}\n`;
-                        
-                        if (item.min_unopened && item.unopened_stock < item.min_unopened) {
-                            shoppingList += `  ⚠️ NEED UNOPENED BACKUP: ${item.min_unopened - item.unopened_stock} ${item.unit}\n`;
-                        }
-                        
-                        if (item.supplier) {
-                            shoppingList += `  SUPPLIER: ${item.supplier}\n`;
-                        }
-                        
-                        if (status.issues.length > 0) {
-                            shoppingList += `  🚨 ISSUES: ${status.issues.join(', ')}\n`;
-                        }
-                        
-                        shoppingList += '\n';
-                    });
-                }
-            });
-            
-            shoppingList += '\n' + '='.repeat(50) + '\n';
-            shoppingList += 'PRIORITY NOTES:\n';
-            shoppingList += '• Items marked CRITICAL must be purchased immediately\n';
-            shoppingList += '• Always maintain unopened backup for consumables\n';
-            shoppingList += '• Check aging equipment for wear and damage\n';
-            shoppingList += '• Replace tools that are lost, dull, or mis-shaped\n';
-            
-            // Create download
-            const blob = new Blob([shoppingList], { type: 'text/plain' });
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = `SUNBURST_URGENT_Shopping_List_${new Date().toISOString().split('T')[0]}.txt`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            window.URL.revokeObjectURL(url);
-            
-            showNotification(`Urgent shopping list generated! ${urgentItems.length} items need attention.`, 'warning');
-        }
-
-        function initializeSystem() {
-            // Sample data for demonstration
-            inventory = [
-                {
-                    id: 1,
-                    name: 'Nitrile Gloves - Medium',
-                    category: 'supplies',
-                    current_stock: 8,
-                    unopened_stock: 1,
-                    unit: 'boxes',
-                    min_stock: 10,
-                    min_unopened: 1,
-                    max_stock: 30,
-                    supplier: 'Safety Supply Plus',
-                    last_purchase: '2025-01-10',
-                    notes: 'Medium size, powder-free. CRITICAL - Must always have 1 unopened box'
-                },
-                {
-                    id: 2,
-                    name: 'Sodium Hydroxide',
-                    category: 'chemicals',
-                    current_stock: 1,
-                    unopened_stock: 0,
-                    unit: 'bottles',
-                    min_stock: 3,
-                    min_unopened: 1,
-                    max_stock: 10,
-                    supplier: 'Industrial Chemicals LLC',
-                    last_purchase: '2024-11-30',
-                    notes: 'CRITICAL CHEMICAL - Essential for cleaning. Handle with extreme care'
-                },
-                {
-                    id: 3,
-                    name: 'Water Hose - 50ft',
-                    category: 'equipment',
-                    current_stock: 2,
-                    unit: 'pieces',
-                    min_stock: 2,
-                    max_stock: 4,
-                    supplier: 'Industrial Hose Co',
-                    last_purchase: '2024-08-15',
-                    age_months: 5,
-                    max_age_months: 24,
-                    notes: 'CRITICAL - Ages and rots. Check for cracks regularly'
-                }
-            ];
-            
-            equipment = [
-                {
-                    id: 1,
-                    name: 'Pressure Washer #1',
-                    type: 'pressure-washer',
-                    condition: 'good',
-                    last_maintenance: '2024-12-01',
-                    notes: 'Running well, oil changed recently'
-                },
-                {
-                    id: 2,
-                    name: 'High Pressure Hose - Main',
-                    type: 'hose',
-                    condition: 'fair',
-                    last_maintenance: '2024-10-15',
-                    notes: 'Small leak near connection, still usable but needs replacement soon'
-                },
-                {
-                    id: 3,
-                    name: 'Extension Ladder - 32ft',
-                    type: 'ladder',
-                    condition: 'excellent',
-                    last_maintenance: '2024-11-01',
-                    notes: 'Recently inspected, all locks working properly'
-                }
-            ];
-            
-            updateDashboard();
-            showNotification('Welcome to SUNBURST Inventory Management! 🎉', 'success');
-        }
-
-        // Event Listeners
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.tab').forEach(tab => {
-                tab.addEventListener('click', (e) => {
-                    showTab(e.target.dataset.tab);
-                });
-            });
-            
-            initializeSystem();
-        });
-    </script>
-</body>
-</html>
